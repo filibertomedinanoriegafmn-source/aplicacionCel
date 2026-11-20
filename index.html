@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="es" class="dark">
 <head>
@@ -292,7 +291,18 @@
  </div>
  </div>
 
- <!-- Zona de peligro -->
+ <!-- Cuenta y sincronización -->
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-3">
+      <h2 class="text-base font-bold text-white">Cuenta y sincronización</h2>
+      <p class="text-sm text-slate-300">Usuario: <strong id="cloud-user-label" class="text-indigo-300">—</strong></p>
+      <p id="cloud-status" class="text-xs text-slate-400"></p>
+      <div class="flex flex-wrap gap-2">
+        <button id="btn-cloud-sync" class="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2.5 rounded-xl text-sm font-semibold transition">Sincronizar ahora</button>
+        <button id="btn-cloud-switch" class="bg-slate-800 hover:bg-slate-700 text-slate-200 px-4 py-2.5 rounded-xl text-sm font-semibold transition">Cambiar usuario</button>
+      </div>
+    </div>
+
+    <!-- Zona de peligro -->
  <div class="bg-rose-950/20 border border-rose-900/50 rounded-2xl p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
  <div>
  <h3 class="text-sm font-bold text-rose-400">Reiniciar progreso SRS</h3>
@@ -362,7 +372,20 @@
  </div>
  </div>
 
- <!-- Contenedor de notificaciones Toast -->
+ <!-- Modal: Usuario (sin contraseña) -->
+  <div id="login-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/80 backdrop-blur-sm p-4">
+    <div class="bg-slate-900 border border-slate-700 rounded-2xl w-full max-w-md p-6 space-y-4 shadow-2xl animate-fade-in">
+      <h3 class="text-lg font-bold text-white">¿Cuál es tu nombre de usuario?</h3>
+      <p class="text-sm text-slate-400">Escríbelo igual en el teléfono y en la computadora para ver el mismo historial. No necesita contraseña.</p>
+      <form id="login-form" class="space-y-3">
+        <input id="login-username" type="text" required maxlength="30" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="Ej. carlos" class="w-full bg-slate-950 border-2 border-slate-700 focus:border-indigo-500 rounded-2xl px-4 py-3.5 text-center text-lg font-semibold text-white placeholder-slate-500 focus:outline-none transition" />
+        <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3.5 rounded-2xl text-base transition">Entrar</button>
+        <button type="button" id="btn-login-skip" class="w-full text-xs text-slate-400 hover:text-slate-200 py-1">Continuar sin sincronizar (solo este dispositivo)</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Contenedor de notificaciones Toast -->
  <div id="toast-container" class="fixed top-20 right-4 z-50 flex flex-col gap-2 pointer-events-none"></div>
 
  <script>
@@ -541,54 +564,57 @@
  }
 
  function loadState() {
- try {
- const raw = localStorage.getItem(STORAGE_KEY);
- if (!raw) return JSON.parse(JSON.stringify(DEFAULT_STATE));
- const parsed = JSON.parse(raw);
- const settings = { ...DEFAULT_STATE.settings, ...(parsed.settings || {}) };
- const progressByMode = createEmptyByMode(() => ({}));
- const statsByMode = createEmptyByMode(createEmptyStats);
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return JSON.parse(JSON.stringify(DEFAULT_STATE));
+        return normalizeState(JSON.parse(raw));
+      } catch (e) {
+        console.error('Error cargando estado:', e);
+        return JSON.parse(JSON.stringify(DEFAULT_STATE));
+      }
+    }
 
- if (parsed.progressByMode) {
- STUDY_MODES.forEach(m => {
- progressByMode[m] = parsed.progressByMode[m] || {};
- });
- } else if (parsed.progress) {
- // Migración desde versión anterior: mover historial previo al modo guardado
- const targetMode = STUDY_MODES.includes(settings.mode) ? settings.mode : 'listen_word';
- progressByMode[targetMode] = parsed.progress;
- }
+    function normalizeState(parsed) {
+      const settings = { ...DEFAULT_STATE.settings, ...(parsed.settings || {}) };
+      const progressByMode = createEmptyByMode(() => ({}));
+      const statsByMode = createEmptyByMode(createEmptyStats);
 
- if (parsed.statsByMode) {
- STUDY_MODES.forEach(m => {
- statsByMode[m] = { ...createEmptyStats(), ...(parsed.statsByMode[m] || {}) };
- });
- } else if (parsed.stats) {
- const targetMode = STUDY_MODES.includes(settings.mode) ? settings.mode : 'listen_word';
- statsByMode[targetMode] = { ...createEmptyStats(), ...parsed.stats };
- }
+      if (parsed.progressByMode) {
+        STUDY_MODES.forEach(m => { progressByMode[m] = parsed.progressByMode[m] || {}; });
+      } else if (parsed.progress) {
+        const targetMode = STUDY_MODES.includes(settings.mode) ? settings.mode : 'listen_word';
+        progressByMode[targetMode] = parsed.progress;
+      }
 
- return {
- progressByMode,
- statsByMode,
- customWords: Array.isArray(parsed.customWords) ? parsed.customWords : [],
- settings
- };
- } catch (e) {
- console.error('Error cargando estado:', e);
- return JSON.parse(JSON.stringify(DEFAULT_STATE));
- }
- }
+      if (parsed.statsByMode) {
+        STUDY_MODES.forEach(m => {
+          statsByMode[m] = { ...createEmptyStats(), ...(parsed.statsByMode[m] || {}) };
+        });
+      } else if (parsed.stats) {
+        const targetMode = STUDY_MODES.includes(settings.mode) ? settings.mode : 'listen_word';
+        statsByMode[targetMode] = { ...createEmptyStats(), ...parsed.stats };
+      }
 
- function saveState() {
- try {
- localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
- } catch (e) {
- showToast('No se pudo guardar en localStorage (espacio lleno).', 'error');
- }
- }
+      return {
+        progressByMode,
+        statsByMode,
+        customWords: Array.isArray(parsed.customWords) ? parsed.customWords : [],
+        settings,
+        updatedAt: parsed.updatedAt || 0
+      };
+    }
 
- function refreshAllWords() {
+    function saveState() {
+      state.updatedAt = Date.now();
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      } catch (e) {
+        showToast('No se pudo guardar en localStorage (espacio lleno).', 'error');
+      }
+      scheduleCloudSave();
+    }
+
+    function refreshAllWords() {
  allWords = [...BASE_WORDS, ...state.customWords];
  document.getElementById('header-total-words').textContent = allWords.length.toLocaleString('es-ES');
  }
@@ -1954,7 +1980,179 @@
  });
  }
 
- // Arranque de la aplicación
+ /**
+     * =========================================================================
+     * SINCRONIZACIÓN CON SUPABASE (usuario sin contraseña)
+     * =========================================================================
+     */
+    const SUPABASE_URL = 'https://mvvmjyiswqwwblqihaxu.supabase.co'; // ej. https://abcdxyz.supabase.co
+    const SUPABASE_KEY = 'sb_publishable_QY095OV2Mm1zUGgVL8gvEw_0ptVMigW';
+    const CLOUD_TABLE = 'historial';
+    const USER_KEY = 'ankiflow_username';
+    const CLOUD_CONFIGURED = /^https?:\/\//.test(SUPABASE_URL);
+
+    let cloudUser = '';
+    try { cloudUser = localStorage.getItem(USER_KEY) || ''; } catch (e) {}
+    let cloudReady = false, cloudBusy = false, cloudDirty = false, cloudSyncing = false, cloudTimer = null;
+
+    function cleanUsername(s) {
+      return String(s || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+        .trim().replace(/\s+/g, '_').replace(/[^a-z0-9_.-]/g, '').slice(0, 30);
+    }
+
+    const cloudHeaders = (extra) => Object.assign({ apikey: SUPABASE_KEY }, extra || {});
+
+    async function cloudGet(user) {
+      const r = await fetch(SUPABASE_URL + '/rest/v1/' + CLOUD_TABLE + '?username=eq.' + encodeURIComponent(user) + '&select=data', { headers: cloudHeaders() });
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      const rows = await r.json();
+      return rows[0] || null;
+    }
+
+    async function cloudPush() {
+      const r = await fetch(SUPABASE_URL + '/rest/v1/' + CLOUD_TABLE + '?on_conflict=username', {
+        method: 'POST',
+        headers: cloudHeaders({ 'Content-Type': 'application/json', Prefer: 'resolution=merge-duplicates,return=minimal' }),
+        body: JSON.stringify({ username: cloudUser, data: state, updated_at: new Date().toISOString() })
+      });
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+    }
+
+    function setCloudStatus(kind) {
+      const el = document.getElementById('cloud-status');
+      if (!el) return;
+      el.textContent = !CLOUD_CONFIGURED ? '⚠️ Falta pegar la URL de Supabase en el código (SUPABASE_URL).'
+        : kind === 'ok' ? '☁️ Sincronizado con la nube'
+        : kind === 'error' ? '⚠️ Sin conexión: se guarda en este dispositivo y se subirá después'
+        : kind === 'busy' ? '⏳ Sincronizando…'
+        : (cloudUser ? '' : 'Sin usuario: el historial solo se guarda en este dispositivo');
+    }
+
+    function renderCloudUI() {
+      const lbl = document.getElementById('cloud-user-label');
+      if (lbl) lbl.textContent = cloudUser || '—';
+      setCloudStatus();
+    }
+
+    function scheduleCloudSave() {
+      if (!CLOUD_CONFIGURED || !cloudUser || !cloudReady) return;
+      clearTimeout(cloudTimer);
+      cloudTimer = setTimeout(flushCloud, 1200);
+    }
+
+    async function flushCloud() {
+      if (!cloudUser || !cloudReady) return;
+      if (cloudBusy) { cloudDirty = true; return; }
+      cloudBusy = true;
+      try { await cloudPush(); setCloudStatus('ok'); }
+      catch (e) { console.error(e); setCloudStatus('error'); }
+      finally {
+        cloudBusy = false;
+        if (cloudDirty) { cloudDirty = false; scheduleCloudSave(); }
+      }
+    }
+
+    function refreshAfterStateChange() {
+      refreshAllWords();
+      checkDailyRollover();
+      syncSettingsUI();
+      updateModeUI();
+      const active = ['study', 'dictionary', 'stats', 'settings'].find(t => !document.getElementById('tab-' + t).classList.contains('hidden')) || 'study';
+      switchTab(active);
+    }
+
+    function adoptRemoteState(remote) {
+      const localVoice = state.settings.voiceURI;
+      state = normalizeState(remote);
+      state.settings.voiceURI = localVoice; // la voz depende de cada dispositivo
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) {}
+      refreshAfterStateChange();
+    }
+
+    async function syncFromCloud(firstLink) {
+      if (!CLOUD_CONFIGURED || !cloudUser || cloudSyncing) return;
+      cloudSyncing = true;
+      cloudReady = false;
+      setCloudStatus('busy');
+      try {
+        const row = await cloudGet(cloudUser);
+        if (!row || !row.data) {
+          await cloudPush();
+          showToast('Usuario nuevo: tu historial se guardará en la nube.', 'success');
+        } else if (firstLink || (row.data.updatedAt || 0) > (state.updatedAt || 0)) {
+          adoptRemoteState(row.data);
+          showToast('Historial de "' + cloudUser + '" cargado.', 'success');
+        } else {
+          await cloudPush();
+        }
+        cloudReady = true;
+        setCloudStatus('ok');
+      } catch (e) {
+        console.error(e);
+        setCloudStatus('error');
+        showToast('No se pudo conectar con Supabase. Se guarda solo en este dispositivo.', 'error');
+      } finally {
+        cloudSyncing = false;
+      }
+    }
+
+    function openLoginModal() {
+      const m = document.getElementById('login-modal');
+      m.classList.remove('hidden'); m.classList.add('flex');
+      setTimeout(() => document.getElementById('login-username').focus(), 50);
+    }
+    function closeLoginModal() {
+      const m = document.getElementById('login-modal');
+      m.classList.add('hidden'); m.classList.remove('flex');
+    }
+
+    async function handleLogin(e) {
+      e.preventDefault();
+      const u = cleanUsername(document.getElementById('login-username').value);
+      if (u.length < 2) { showToast('Escribe un usuario de al menos 2 letras o números.', 'error'); return; }
+      cloudUser = u;
+      try { localStorage.setItem(USER_KEY, u); } catch (err) {}
+      closeLoginModal();
+      renderCloudUI();
+      await syncFromCloud(true);
+    }
+
+    async function switchCloudUser() {
+      if (cloudReady && cloudUser) { clearTimeout(cloudTimer); try { await cloudPush(); } catch (e) {} }
+      const keep = state.settings;
+      cloudUser = ''; cloudReady = false;
+      try { localStorage.removeItem(USER_KEY); } catch (e) {}
+      state = JSON.parse(JSON.stringify(DEFAULT_STATE));
+      state.settings.voiceURI = keep.voiceURI;
+      state.settings.autoplay = keep.autoplay;
+      try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) {}
+      renderCloudUI();
+      refreshAfterStateChange();
+      if (CLOUD_CONFIGURED) openLoginModal();
+    }
+
+    function initCloud() {
+      document.getElementById('login-form').addEventListener('submit', handleLogin);
+      document.getElementById('btn-login-skip').addEventListener('click', () => { closeLoginModal(); setCloudStatus(); });
+      document.getElementById('btn-cloud-sync').addEventListener('click', () => {
+        if (!CLOUD_CONFIGURED) { showToast('Falta pegar la URL de Supabase en el código.', 'error'); return; }
+        if (!cloudUser) openLoginModal(); else syncFromCloud(false);
+      });
+      document.getElementById('btn-cloud-switch').addEventListener('click', () => {
+        if (!CLOUD_CONFIGURED) { showToast('Falta pegar la URL de Supabase en el código.', 'error'); return; }
+        switchCloudUser();
+      });
+      window.addEventListener('online', () => { if (cloudUser && !cloudReady) syncFromCloud(false); });
+      document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'hidden' && cloudReady && cloudUser) { clearTimeout(cloudTimer); flushCloud(); }
+        else if (document.visibilityState === 'visible' && cloudUser && !cloudReady) syncFromCloud(false);
+      });
+      renderCloudUI();
+      if (!CLOUD_CONFIGURED) return;
+      if (cloudUser) syncFromCloud(false); else openLoginModal();
+    }
+
+    // Arranque de la aplicación
  window.addEventListener('DOMContentLoaded', () => {
  refreshAllWords();
  checkDailyRollover();
@@ -1962,6 +2160,7 @@
  updateModeUI();
  initEvents();
  switchTab('study');
+      initCloud();
  });
  </script>
 </body>
