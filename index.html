@@ -1,0 +1,1832 @@
+```html
+<!DOCTYPE html>
+<html lang="es" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>AnkiFlow 2000 — Vocabulario Inglés SRS Multimodo</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Fuente Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'system-ui', 'sans-serif'] },
+          animation: {
+            'pulse-ring': 'pulseRing 1.4s cubic-bezier(0.215, 0.61, 0.355, 1) infinite',
+            'fade-in': 'fadeIn 0.2s ease-out forwards',
+          },
+          keyframes: {
+            pulseRing: {
+              '0%': { transform: 'scale(0.95)', boxShadow: '0 0 0 0 rgba(244, 63, 94, 0.7)' },
+              '70%': { transform: 'scale(1.03)', boxShadow: '0 0 0 18px rgba(244, 63, 94, 0)' },
+              '100%': { transform: 'scale(0.95)', boxShadow: '0 0 0 0 rgba(244, 63, 94, 0)' },
+            },
+            fadeIn: {
+              '0%': { opacity: '0', transform: 'translateY(6px)' },
+              '100%': { opacity: '1', transform: 'translateY(0)' },
+            }
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    body { font-family: 'Inter', system-ui, sans-serif; -webkit-tap-highlight-color: transparent; }
+    /* Ocultar barras de desplazamiento en contenedores horizontales */
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col selection:bg-indigo-500/30 selection:text-indigo-200">
+
+  <!-- Barra superior -->
+  <header class="sticky top-0 z-30 bg-slate-950/90 backdrop-blur-md border-b border-slate-800/80">
+    <div class="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between gap-2">
+      <!-- Marca y contador exacto -->
+      <div class="flex items-center gap-3 min-w-0">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center shadow-lg shadow-indigo-500/20 shrink-0">
+          <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25"/>
+          </svg>
+        </div>
+        <div class="truncate">
+          <h1 class="font-bold text-base sm:text-lg leading-tight tracking-tight text-white">AnkiFlow 2000</h1>
+          <p class="text-[11px] sm:text-xs text-slate-400">
+            <span id="header-total-words" class="font-semibold text-indigo-400">0</span> palabras cargadas
+          </p>
+        </div>
+      </div>
+
+      <!-- Navegación escritorio -->
+      <nav class="hidden md:flex items-center gap-1 bg-slate-900/90 p-1 rounded-xl border border-slate-800">
+        <button data-tab="study" class="nav-btn px-3.5 py-1.5 rounded-lg text-sm font-medium transition-all">Estudiar</button>
+        <button data-tab="dictionary" class="nav-btn px-3.5 py-1.5 rounded-lg text-sm font-medium transition-all">Diccionario</button>
+        <button data-tab="stats" class="nav-btn px-3.5 py-1.5 rounded-lg text-sm font-medium transition-all">Estadísticas</button>
+        <button data-tab="settings" class="nav-btn px-3.5 py-1.5 rounded-lg text-sm font-medium transition-all">Ajustes</button>
+      </nav>
+
+      <!-- Racha y botón añadir -->
+      <div class="flex items-center gap-2 shrink-0">
+        <div class="flex items-center gap-1.5 bg-slate-900 border border-slate-800 px-2.5 py-1.5 rounded-xl text-xs font-semibold text-amber-400" title="Racha diaria de estudio">
+          <span>🔥</span>
+          <span id="header-streak">0</span>
+        </div>
+        <button id="btn-open-add-modal" class="flex items-center gap-1.5 bg-indigo-600 hover:bg-indigo-500 active:scale-95 text-white px-3 py-1.5 rounded-xl text-xs sm:text-sm font-semibold transition-all shadow-md shadow-indigo-600/20">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15"/></svg>
+          <span class="hidden sm:inline">Añadir</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Contenido principal -->
+  <main class="flex-1 max-w-5xl w-full mx-auto px-4 pt-5 pb-24 md:pb-10">
+
+    <!-- ==================== PESTAÑA: ESTUDIAR ==================== -->
+    <section id="tab-study" class="tab-panel space-y-4">
+      <!-- Selector de 4 modos de estudio -->
+      <div class="bg-slate-900/80 border border-slate-800 rounded-2xl p-2">
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-1.5" id="mode-selector">
+          <button data-mode="listen_only" class="mode-btn flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all">
+            <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5.25 5.25 0 010 7.424M6.75 8.25l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z"/></svg>
+            <span>Solo Escucha</span>
+          </button>
+          <button data-mode="listen_word" class="mode-btn flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all">
+            <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+            <span>Escucha + Palabra</span>
+          </button>
+          <button data-mode="write" class="mode-btn flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all">
+            <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M16.862 4.487l1.687-1.688a1.875 1.875 0 112.652 2.652L6.832 19.82a4.5 4.5 0 01-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 011.13-1.897L16.863 4.487z"/></svg>
+            <span>Escribir Inglés</span>
+          </button>
+          <button data-mode="speak" class="mode-btn flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all">
+            <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 18.75a6 6 0 006-6v-1.5m-6 7.5a6 6 0 01-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 01-3-3V4.5a3 3 0 116 0v8.25a3 3 0 01-3 3z"/></svg>
+            <span>Hablar</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Barra de filtros y contadores de sesión -->
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-slate-900/60 border border-slate-800/80 rounded-2xl px-4 py-3">
+        <div class="flex items-center gap-2">
+          <label for="study-block-filter" class="text-xs font-medium text-slate-400 shrink-0">Bloque:</label>
+          <select id="study-block-filter" class="bg-slate-950 border border-slate-700 text-slate-200 text-xs sm:text-sm rounded-xl px-3 py-1.5 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            <option value="all">Todas (1 – 2000+)</option>
+            <option value="1-500">Top 1 – 500</option>
+            <option value="501-1000">Bloque 501 – 1000</option>
+            <option value="1001-1500">Bloque 1001 – 1500</option>
+            <option value="1501-2000">Bloque 1501 – 2000</option>
+            <option value="custom">Personalizadas</option>
+          </select>
+        </div>
+        <div class="flex items-center gap-3 text-xs font-medium">
+          <span class="px-2.5 py-1 rounded-lg bg-sky-500/10 text-sky-400 border border-sky-500/20">
+            Nuevas hoy: <strong id="queue-new-count">0</strong>
+          </span>
+          <span class="px-2.5 py-1 rounded-lg bg-amber-500/10 text-amber-400 border border-amber-500/20">
+            Repaso: <strong id="queue-due-count">0</strong>
+          </span>
+          <span class="px-2.5 py-1 rounded-lg bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+            Hechas hoy: <strong id="session-done-count">0</strong>
+          </span>
+        </div>
+      </div>
+
+      <!-- Tarjeta de estudio principal -->
+      <div id="study-card-container" class="bg-slate-900 border border-slate-800 rounded-3xl p-5 sm:p-8 shadow-2xl shadow-black/40 min-h-[380px] flex flex-col justify-between relative overflow-hidden">
+        <!-- Contenido dinámico de la tarjeta -->
+      </div>
+
+      <!-- Ayuda de atajos en escritorio -->
+      <div class="hidden md:flex items-center justify-center gap-5 text-xs text-slate-500 pt-1">
+        <span><kbd class="px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700">Espacio</kbd> Mostrar respuesta</span>
+        <span><kbd class="px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700">1</kbd>-<kbd class="px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700">4</kbd> Calificar SRS</span>
+        <span><kbd class="px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700">R</kbd> Repetir audio</span>
+        <span><kbd class="px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700">L</kbd> Audio lento</span>
+      </div>
+    </section>
+
+    <!-- ==================== PESTAÑA: DICCIONARIO ==================== -->
+    <section id="tab-dictionary" class="tab-panel hidden space-y-4">
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-3">
+        <div class="flex flex-col sm:flex-row gap-3">
+          <div class="relative flex-1">
+            <svg class="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/></svg>
+            <input id="dict-search" type="text" placeholder="Buscar palabra en inglés o español..." class="w-full bg-slate-950 border border-slate-700 rounded-xl pl-10 pr-4 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+          </div>
+          <div class="flex gap-2">
+            <select id="dict-block-filter" class="bg-slate-950 border border-slate-700 text-slate-200 text-xs sm:text-sm rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+              <option value="all">Todos los bloques</option>
+              <option value="1-500">1 – 500</option>
+              <option value="501-1000">501 – 1000</option>
+              <option value="1001-1500">1001 – 1500</option>
+              <option value="1501-2000">1501 – 2000</option>
+              <option value="custom">Personalizadas</option>
+            </select>
+            <select id="dict-status-filter" class="bg-slate-950 border border-slate-700 text-slate-200 text-xs sm:text-sm rounded-xl px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+              <option value="all">Todos los estados</option>
+              <option value="new">Nuevas</option>
+              <option value="learning">En aprendizaje</option>
+              <option value="mastered">Dominadas</option>
+            </select>
+          </div>
+        </div>
+        <div class="flex items-center justify-between text-xs text-slate-400">
+          <span id="dict-results-info">Mostrando 0 palabras</span>
+          <div class="flex items-center gap-2">
+            <button id="dict-prev-page" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 disabled:opacity-40 text-slate-200 transition">Anterior</button>
+            <span id="dict-page-label" class="font-medium text-slate-300">1 / 1</span>
+            <button id="dict-next-page" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 disabled:opacity-40 text-slate-200 transition">Siguiente</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Lista de palabras -->
+      <div id="dict-list" class="space-y-2"></div>
+    </section>
+
+    <!-- ==================== PESTAÑA: ESTADÍSTICAS ==================== -->
+    <section id="tab-stats" class="tab-panel hidden space-y-5">
+      <div class="grid grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-5">
+          <p class="text-xs text-slate-400 font-medium">Total en mazo</p>
+          <p id="stat-total" class="text-2xl sm:text-3xl font-extrabold text-white mt-1">0</p>
+        </div>
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-5">
+          <p class="text-xs text-slate-400 font-medium">Dominadas (≥21 días)</p>
+          <p id="stat-mastered" class="text-2xl sm:text-3xl font-extrabold text-emerald-400 mt-1">0</p>
+        </div>
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-5">
+          <p class="text-xs text-slate-400 font-medium">En aprendizaje</p>
+          <p id="stat-learning" class="text-2xl sm:text-3xl font-extrabold text-indigo-400 mt-1">0</p>
+        </div>
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-5">
+          <p class="text-xs text-slate-400 font-medium">Pendientes hoy</p>
+          <p id="stat-due" class="text-2xl sm:text-3xl font-extrabold text-amber-400 mt-1">0</p>
+        </div>
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-5">
+          <p class="text-xs text-slate-400 font-medium">Precisión global</p>
+          <p id="stat-accuracy" class="text-2xl sm:text-3xl font-extrabold text-sky-400 mt-1">0%</p>
+        </div>
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 sm:p-5">
+          <p class="text-xs text-slate-400 font-medium">Racha diaria</p>
+          <p id="stat-streak" class="text-2xl sm:text-3xl font-extrabold text-rose-400 mt-1">0 días</p>
+        </div>
+      </div>
+
+      <!-- Progreso por bloques -->
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-4">
+        <h2 class="text-base font-bold text-white">Progreso por bloques de frecuencia</h2>
+        <div id="stats-blocks-container" class="space-y-4"></div>
+      </div>
+    </section>
+
+    <!-- ==================== PESTAÑA: AJUSTES E IMPORTACIÓN ==================== -->
+    <section id="tab-settings" class="tab-panel hidden space-y-5">
+      <!-- Configuración de estudio y voz -->
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-4">
+        <h2 class="text-base font-bold text-white">Preferencias de estudio y audio</h2>
+        <div class="grid sm:grid-cols-2 gap-4">
+          <div class="space-y-1.5">
+            <label for="setting-new-limit" class="text-sm text-slate-300 font-medium">Palabras nuevas por día</label>
+            <input id="setting-new-limit" type="number" min="1" max="500" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+          </div>
+          <div class="space-y-1.5">
+            <label for="setting-voice" class="text-sm text-slate-300 font-medium">Voz de pronunciación (en-US)</label>
+            <select id="setting-voice" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-indigo-500">
+              <option value="">Automática (en-US)</option>
+            </select>
+          </div>
+        </div>
+        <div class="flex items-center justify-between pt-2">
+          <div>
+            <p class="text-sm font-medium text-slate-200">Reproducción automática de audio</p>
+            <p class="text-xs text-slate-400">Reproduce el audio al aparecer una tarjeta en modos de escucha</p>
+          </div>
+          <label class="relative inline-flex items-center cursor-pointer">
+            <input id="setting-autoplay" type="checkbox" class="sr-only peer" />
+            <div class="w-11 h-6 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-indigo-600"></div>
+          </label>
+        </div>
+        <button id="btn-save-settings" class="bg-indigo-600 hover:bg-indigo-500 text-white px-5 py-2.5 rounded-xl text-sm font-semibold transition">Guardar preferencias</button>
+      </div>
+
+      <!-- Importación / Exportación masiva -->
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-4">
+        <h2 class="text-base font-bold text-white">Importación y exportación masiva</h2>
+        <p class="text-xs text-slate-400">
+          Pega una palabra por línea en formato <code class="text-indigo-300 bg-slate-800 px-1.5 py-0.5 rounded">ingles, español</code> o un arreglo JSON <code class="text-indigo-300 bg-slate-800 px-1.5 py-0.5 rounded">[{"en":"hello","es":"hola"}]</code>.
+        </p>
+        <textarea id="bulk-import-text" rows="5" placeholder="apple, manzana&#10;journey, viaje&#10;achieve, lograr" class="w-full bg-slate-950 border border-slate-700 rounded-xl p-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 font-mono"></textarea>
+        <div class="flex flex-wrap gap-2">
+          <button id="btn-bulk-import" class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2.5 rounded-xl text-sm font-semibold transition">Importar palabras</button>
+          <button id="btn-export-json" class="bg-slate-800 hover:bg-slate-700 text-slate-200 px-4 py-2.5 rounded-xl text-sm font-semibold transition">Exportar respaldo JSON</button>
+          <button id="btn-export-csv" class="bg-slate-800 hover:bg-slate-700 text-slate-200 px-4 py-2.5 rounded-xl text-sm font-semibold transition">Copiar lista (CSV)</button>
+        </div>
+      </div>
+
+      <!-- Zona de peligro -->
+      <div class="bg-rose-950/20 border border-rose-900/50 rounded-2xl p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h3 class="text-sm font-bold text-rose-400">Reiniciar progreso SRS</h3>
+          <p class="text-xs text-slate-400 mt-0.5">Borra el historial de repaso y estadísticas. Las 2,000 palabras base se mantendrán intactas.</p>
+        </div>
+        <button id="btn-open-reset-modal" class="bg-rose-600/20 hover:bg-rose-600 text-rose-300 hover:text-white border border-rose-600/40 px-4 py-2.5 rounded-xl text-sm font-semibold transition shrink-0">Reiniciar progreso</button>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Navegación inferior para móvil -->
+  <nav class="md:hidden fixed bottom-0 inset-x-0 z-30 bg-slate-950/95 backdrop-blur-md border-t border-slate-800 px-2 py-1.5">
+    <div class="grid grid-cols-4 gap-1">
+      <button data-tab="study" class="nav-btn-mobile flex flex-col items-center justify-center py-1.5 rounded-xl text-[11px] font-medium transition">
+        <svg class="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4.26 10.147a60.436 60.436 0 00-.491 6.347A48.627 48.627 0 0112 20.904a48.627 48.627 0 018.232-4.41 60.46 60.46 0 00-.491-6.347m-15.482 0a50.57 50.57 0 00-2.658-.813A59.905 59.905 0 0112 3.493a59.902 59.902 0 0110.399 5.84c-.896.248-1.783.52-2.658.814m-15.482 0A50.697 50.697 0 0112 13.489a50.702 50.702 0 017.74-3.342"/></svg>
+        <span>Estudiar</span>
+      </button>
+      <button data-tab="dictionary" class="nav-btn-mobile flex flex-col items-center justify-center py-1.5 rounded-xl text-[11px] font-medium transition">
+        <svg class="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25"/></svg>
+        <span>Diccionario</span>
+      </button>
+      <button data-tab="stats" class="nav-btn-mobile flex flex-col items-center justify-center py-1.5 rounded-xl text-[11px] font-medium transition">
+        <svg class="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z"/></svg>
+        <span>Estadísticas</span>
+      </button>
+      <button data-tab="settings" class="nav-btn-mobile flex flex-col items-center justify-center py-1.5 rounded-xl text-[11px] font-medium transition">
+        <svg class="w-5 h-5 mb-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.324.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.24-.438.613-.431.992a6.759 6.759 0 010 .255c-.007.378.138.75.43.99l1.005.828c.424.35.534.954.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.57 6.57 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.28c-.09.543-.56.941-1.11.941h-2.594c-.55 0-1.02-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.431l1.004-.827c.292-.24.437-.613.43-.992a6.932 6.932 0 010-.255c.007-.378-.138-.75-.43-.99l-1.004-.828a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.087.22-.128.332-.183.582-.495.644-.869l.214-1.281z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+        <span>Ajustes</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Modal: Añadir palabra manual -->
+  <div id="add-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/70 backdrop-blur-sm p-4">
+    <div class="bg-slate-900 border border-slate-700 rounded-2xl w-full max-w-md p-6 space-y-4 shadow-2xl animate-fade-in">
+      <div class="flex items-center justify-between">
+        <h3 class="text-lg font-bold text-white">Añadir palabra personalizada</h3>
+        <button id="btn-close-add-modal" class="text-slate-400 hover:text-white p-1 rounded-lg">✕</button>
+      </div>
+      <form id="add-word-form" class="space-y-3">
+        <div>
+          <label class="block text-xs font-medium text-slate-400 mb-1">Palabra en inglés</label>
+          <input id="add-en" type="text" required placeholder="Ej. breakthrough" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-slate-400 mb-1">Traducción al español</label>
+          <input id="add-es" type="text" required placeholder="Ej. avance, logro" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-indigo-500" />
+        </div>
+        <div class="flex justify-end gap-2 pt-2">
+          <button type="button" id="btn-cancel-add" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-sm font-medium text-slate-200">Cancelar</button>
+          <button type="submit" class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-sm font-semibold text-white">Guardar palabra</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Confirmar reinicio de progreso -->
+  <div id="reset-modal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/70 backdrop-blur-sm p-4">
+    <div class="bg-slate-900 border border-rose-800/60 rounded-2xl w-full max-w-md p-6 space-y-4 shadow-2xl animate-fade-in">
+      <h3 class="text-lg font-bold text-rose-400">¿Reiniciar todo el progreso?</h3>
+      <p class="text-sm text-slate-300">Se restablecerán los intervalos SRS, las estadísticas y la racha diaria. Esta acción no se puede deshacer.</p>
+      <div class="flex justify-end gap-2 pt-2">
+        <button id="btn-cancel-reset" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-sm font-medium text-slate-200">Cancelar</button>
+        <button id="btn-confirm-reset" class="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-sm font-semibold text-white">Sí, reiniciar</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contenedor de notificaciones Toast -->
+  <div id="toast-container" class="fixed top-20 right-4 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+  <script>
+    /**
+     * =========================================================================
+     * 1. BASE DE DATOS EMBEBIDA DE LAS 2,000 PALABRAS MÁS COMUNES EN INGLÉS
+     * Formato compacto: "ingles|español;ingles|español;..."
+     * Organizado en 20 bloques de 100 palabras ordenadas por frecuencia (1-2000)
+     * =========================================================================
+     */
+    const RAW_VOCAB_CHUNKS = [
+      // Bloque 1 (1 - 100)
+      "the|el, la, los, las;be|ser, estar;to|a, hacia, para;of|de;and|y;a|un, una;in|en, dentro de;that|ese, eso, que;have|tener, haber;I|yo;it|ello, lo, la;for|para, por;not|no;on|en, sobre;with|con;he|él;as|como, mientras;you|tú, usted, ustedes;do|hacer;at|en, a;this|este, esta, esto;but|pero, sino;his|su (de él);by|por, junto a;from|de, desde;they|ellos, ellas;we|nosotros;say|decir;her|su (de ella), la;she|ella;or|o;an|un, una;will|voluntad, (futuro);my|mi, mis;one|uno;all|todo, todos;would|(condicional);there|allí, hay;their|su (de ellos);what|qué, lo que;so|así que, tan;up|arriba;out|fuera;if|si;about|acerca de, sobre;who|quién, quien;get|obtener, conseguir;which|cuál, el cual;go|ir;me|me, mí;when|cuándo, cuando;make|hacer, fabricar;can|poder, lata;like|gustar, como;time|tiempo, vez;no|no, ningún;just|solo, justo;him|lo, le, él;know|saber, conocer;take|tomar, llevar;people|gente, personas;into|dentro de, hacia;year|año;your|tu, su;good|bueno;some|alguno, algo;could|podría, pudo;them|los, les, ellos;see|ver;other|otro;than|que (comparativo);then|entonces, luego;now|ahora;look|mirar, parecer;only|solo, solamente;come|venir;its|su (de ello);over|sobre, encima;think|pensar, creer;also|también;back|atrás, espalda;after|después de;use|usar, uso;two|dos;how|cómo;our|nuestro;work|trabajar, trabajo;first|primero;well|bien, pozo;way|camino, manera;even|incluso, par;new|nuevo;want|querer;because|porque;any|cualquier, algún;these|estos, estas;give|dar;day|día;most|la mayoría, más;us|nos, nosotros",
+
+      // Bloque 2 (101 - 200)
+      "very|muy;find|encontrar;tell|contar, decir;ask|preguntar, pedir;seem|parecer;feel|sentir;try|intentar, probar;leave|salir, dejar;call|llamar, llamada;need|necesitar, necesidad;become|llegar a ser;mean|significar, tacaño;keep|mantener, guardar;let|dejar, permitir;begin|empezar, comenzar;help|ayudar, ayuda;talk|hablar, charla;turn|girar, turno;start|iniciar, comienzo;show|mostrar, espectáculo;hear|oír, escuchar;play|jugar, tocar;run|correr, ejecutar;move|mover, mudarse;live|vivir, en vivo;believe|creer;hold|sostener, sujetar;bring|traer;happen|suceder, pasar;write|escribir;provide|proporcionar;sit|sentarse;stand|estar de pie;lose|perder;pay|pagar, pago;meet|conocer, reunirse;include|incluir;continue|continuar;set|poner, conjunto;learn|aprender;change|cambiar, cambio;lead|dirigir, plomo;understand|entender;watch|ver, reloj;follow|seguir;stop|detener, parada;create|crear;speak|hablar;read|leer;allow|permitir;add|añadir, sumar;spend|gastar, pasar;grow|crecer, cultivar;open|abrir, abierto;walk|caminar, paseo;win|ganar;offer|ofrecer, oferta;remember|recordar;love|amar, amor;consider|considerar;appear|aparecer;buy|comprar;wait|esperar;serve|servir;die|morir;send|enviar;expect|esperar, suponer;build|construir;stay|quedarse, estancia;fall|caer, otoño;cut|cortar, corte;reach|alcanzar, llegar;kill|matar;remain|permanecer;suggest|sugerir;raise|levantar, criar;pass|pasar, pase;sell|vender;require|requerir;report|informar, informe;decide|decidir;pull|jalar, tirar;break|romper, descanso;man|hombre;woman|mujer;child|niño, niña;world|mundo;life|vida;hand|mano;part|parte;place|lugar;case|caso, estuche;week|semana;company|empresa, compañía;system|sistema;program|programa;question|pregunta;government|gobierno;number|número;night|noche",
+
+      // Bloque 3 (201 - 300)
+      "point|punto, señalar;home|hogar, casa;water|agua;room|habitación, espacio;mother|madre;area|área, zona;money|dinero;story|historia, cuento;fact|hecho;month|mes;lot|mucho, lote;right|derecho, correcto;study|estudiar, estudio;book|libro, reservar;eye|ojo;job|empleo, trabajo;word|palabra;business|negocio;issue|asunto, problema;side|lado;kind|amable, tipo;head|cabeza;house|casa;service|servicio;friend|amigo;father|padre;power|poder, energía;hour|hora;game|juego;line|línea, fila;end|fin, terminar;member|miembro;law|ley;car|coche, auto;city|ciudad;community|comunidad;name|nombre, nombrar;president|presidente;team|equipo;minute|minuto;idea|idea;kid|niño, chico;body|cuerpo;information|información;nothing|nada;ago|hace (tiempo);social|social;parent|padre o madre;face|cara, enfrentar;others|otros;level|nivel;office|oficina;door|puerta;health|salud;person|persona;art|arte;war|guerra;history|historia;party|fiesta, partido;result|resultado;morning|mañana;reason|razón, motivo;research|investigación;girl|chica, niña;guy|chico, tipo;moment|momento;air|aire;teacher|profesor, maestro;force|fuerza, forzar;education|educación;foot|pie;boy|chico, niño;age|edad;policy|política, póliza;process|proceso;music|música;market|mercado;sense|sentido;nation|nación;plan|plan, planear;college|universidad, colegio;interest|interés;death|muerte;experience|experiencia;effect|efecto;class|clase;control|control, controlar;care|cuidado, importar;field|campo;development|desarrollo;role|papel, rol;effort|esfuerzo;rate|tasa, tarifa;heart|corazón;drug|medicamento, droga;leader|líder;light|luz, ligero;voice|voz;wife|esposa;police|policía",
+
+      // Bloque 4 (301 - 400)
+      "mind|mente, importar;price|precio;decision|decisión;son|hijo;hope|esperanza, esperar;view|vista, opinión;relationship|relación;town|pueblo, ciudad;road|carretera, camino;arm|brazo;difference|diferencia;value|valor;building|edificio;action|acción;model|modelo;season|temporada, estación;society|sociedad;tax|impuesto;director|director;position|posición, puesto;player|jugador;record|registro, disco;paper|papel, periódico;space|espacio;ground|suelo, tierra;form|forma, formulario;event|evento, suceso;official|oficial;matter|asunto, importar;center|centro;couple|pareja, par;site|sitio, lugar;project|proyecto;activity|actividad;star|estrella;table|mesa, tabla;court|tribunal, cancha;oil|aceite, petróleo;situation|situación;cost|costo, costar;industry|industria;figure|figura, cifra;street|calle;image|imagen;phone|teléfono;data|datos;picture|imagen, foto;practice|práctica, practicar;piece|pieza, pedazo;land|tierra, aterrizar;product|producto;doctor|doctor, médico;wall|pared, muro;patient|paciente;worker|trabajador;news|noticias;test|prueba, examen;movie|película;north|norte;personal|personal;support|apoyo, apoyar;technology|tecnología;step|paso, pisar;baby|bebé;computer|computadora;type|tipo, escribir;attention|atención;film|película;tree|árbol;source|fuente, origen;organization|organización;hair|cabello, pelo;window|ventana;culture|cultura;chance|oportunidad, azar;brother|hermano;energy|energía;period|período;course|curso, plato;summer|verano;plant|planta, plantar;opportunity|oportunidad;term|término, plazo;letter|carta, letra;condition|condición;choice|elección, opción;rule|regla, gobernar;daughter|hija;administration|administración;south|sur;husband|esposo;floor|piso, suelo;campaign|campaña;material|material;population|población;economy|economía;hospital|hospital;church|iglesia;risk|riesgo;fire|fuego, despedir",
+
+      // Bloque 5 (401 - 500)
+      "future|futuro;defense|defensa;security|seguridad;bank|banco;west|oeste;sport|deporte;board|tablero, junta;subject|tema, asignatura;officer|oficial, agente;rest|descanso, resto;behavior|comportamiento;performance|rendimiento, actuación;top|cima, superior;goal|meta, gol;second|segundo;bed|cama;order|orden, pedir;author|autor;blood|sangre;agency|agencia;nature|naturaleza;color|color;store|tienda, almacenar;sound|sonido, sonar;movement|movimiento;page|página;race|carrera, raza;concern|preocupación;series|serie;language|idioma, lenguaje;response|respuesta;animal|animal;factor|factor;decade|década;article|artículo;east|este;artist|artista;scene|escena;stock|existencias, acciones;career|carrera profesional;treatment|tratamiento;approach|enfoque, acercarse;size|tamaño;dog|perro;fund|fondo, financiar;media|medios de comunicación;sign|señal, firmar;thought|pensamiento;list|lista;individual|individuo, individual;quality|calidad;pressure|presión;answer|respuesta, responder;resource|recurso;meeting|reunión;disease|enfermedad;success|éxito;cup|taza, copa;amount|cantidad;ability|habilidad, capacidad;staff|personal, equipo;character|personaje, carácter;growth|crecimiento;loss|pérdida;degree|grado, título;attack|ataque, atacar;region|región;television|televisión;box|caja;training|entrenamiento;trade|comercio, oficio;deal|trato, acuerdo;election|elección;feeling|sentimiento;standard|estándar, norma;bill|factura, billete;message|mensaje;analysis|análisis;benefit|beneficio;sex|sexo;lawyer|abogado;section|sección;glass|vidrio, vaso;skill|habilidad, destreza;sister|hermana;professor|profesor;operation|operación;crime|crimen, delito;stage|escenario, etapa;authority|autoridad;design|diseño, diseñar;sort|tipo, ordenar;knowledge|conocimiento;gun|arma, pistola;station|estación;strategy|estrategia;truth|verdad;song|canción;example|ejemplo;environment|medio ambiente",
+
+      // Bloque 6 (501 - 600)
+      "leg|pierna;public|público;executive|ejecutivo;settle|resolver, establecerse;big|grande;high|alto;small|pequeño;large|grande, amplio;next|siguiente, próximo;early|temprano;young|joven;important|importante;few|pocos;bad|malo;same|mismo;able|capaz;long|largo;little|pequeño, poco;own|propio, poseer;old|viejo, antiguo;great|genial, gran;real|real, verdadero;best|mejor;better|mejor (que);sure|seguro;free|libre, gratis;true|verdadero;full|lleno;special|especial;easy|fácil;clear|claro, despejar;recent|reciente;certain|cierto, seguro;strong|fuerte;possible|posible;whole|entero, todo;freeway|autopista;hard|duro, difícil;major|principal, mayor;economic|económico;international|internacional;local|local;national|nacional;political|político;human|humano;different|diferente;available|disponible;likely|probable;short|corto, bajo;single|soltero, único;medical|médico;current|actual, corriente;wrong|incorrecto, mal;private|privado;past|pasado;foreign|extranjero;fine|bien, fino, multa;common|común;poor|pobre;natural|natural;significant|significativo;similar|similar;hot|caliente, picante;dead|muerto;central|central;happy|feliz;serious|serio, grave;ready|listo;simple|simple, sencillo;left|izquierda, dejado;physical|físico;general|general;environmental|ambiental;financial|financiero;blue|azul;democratic|democrático;dark|oscuro;various|varios;entire|entero, completo;close|cerrar, cerca;legal|legal;religious|religioso;cold|frío;final|final;main|principal;green|verde;nice|agradable, bonito;huge|enorme;popular|popular;traditional|tradicional;cultural|cultural;wide|ancho;deep|profundo;fast|rápido;slow|lento;heavy|pesado;rich|rico;safe|seguro, caja fuerte;clean|limpio, limpiar;quiet|tranquilo, callado",
+
+      // Bloque 7 (601 - 700)
+      "here|aquí;always|siempre;never|nunca;often|a menudo;sometimes|a veces;usually|usualmente;already|ya;yet|todavía, aún;still|todavía, quieto;almost|casi;enough|suficiente;too|también, demasiado;again|otra vez;away|lejos;far|lejos;near|cerca;soon|pronto;today|hoy;tomorrow|mañana;yesterday|ayer;tonight|esta noche;maybe|tal vez, quizás;perhaps|quizás;probably|probablemente;really|realmente;actually|en realidad;especially|especialmente;finally|finalmente;quickly|rápidamente;simply|simplemente;recently|recientemente;suddenly|de repente;certainly|ciertamente;clearly|claramente;together|juntos;alone|solo;forward|adelante;ahead|adelante;behind|detrás;below|debajo;above|encima;around|alrededor;through|a través de;during|durante;before|antes;until|hasta;since|desde, ya que;while|mientras;although|aunque;though|aunque;however|sin embargo;therefore|por lo tanto;instead|en lugar de;without|sin;within|dentro de;between|entre (dos);among|entre (varios);against|contra;toward|hacia;across|a través de;along|a lo largo de;under|debajo de;off|apagado, fuera;down|abajo;inside|dentro;outside|fuera;everywhere|en todas partes;somewhere|en algún lugar;anywhere|en cualquier lugar;nowhere|en ningún lugar;everyone|todos;someone|alguien;anyone|cualquiera;no one|nadie;everything|todo;something|algo;anything|cualquier cosa;each|cada;every|cada, todos;both|ambos;either|cualquiera (de dos);neither|ninguno (de dos);several|varios;many|muchos;much|mucho;more|más;less|menos;least|menos (mínimo);fewest|menos (contable);three|tres;four|cuatro;five|cinco;six|seis;seven|siete;eight|ocho;nine|nueve;ten|diez;hundred|cien;thousand|mil;million|millón",
+
+      // Bloque 8 (701 - 800)
+      "explain|explicar;hope|esperar;develop|desarrollar;carry|llevar, cargar;return|regresar, devolver;produce|producir;eat|comer;drink|beber;sleep|dormir;drive|conducir;wear|llevar puesto;choose|elegir;draw|dibujar;catch|atrapar;throw|lanzar, tirar;push|empujar;touch|tocar;smile|sonreír, sonrisa;laugh|reír, risa;cry|llorar, gritar;sing|cantar;dance|bailar, baile;jump|saltar, salto;swim|nadar;fly|volar, mosca;climb|escalar, subir;ride|montar, paseo;save|ahorrar, salvar;share|compartir;join|unirse;agree|estar de acuerdo;disagree|no estar de acuerdo;argue|discutir;fight|pelear, pelea;protect|proteger;prevent|prevenir;avoid|evitar;accept|aceptar;refuse|rechazar;receive|recibir;check|revisar, cheque;test|probar;compare|comparar;improve|mejorar;increase|aumentar;reduce|reducir;remove|eliminar, quitar;replace|reemplazar;repair|reparar;fix|arreglar, fijar;prepare|preparar;cook|cocinar, cocinero;bake|hornear;wash|lavar;dry|secar, seco;fold|doblar;pack|empacar;travel|viajar, viaje;visit|visitar, visita;arrive|llegar;depart|partir, salir;enter|entrar;exit|salir, salida;cross|cruzar, cruz;turn|doblar, girar;follow|seguir;search|buscar, búsqueda;discover|descubrir;explore|explorar;invent|inventar;imagine|imaginar;dream|soñar, sueño;wish|desear, deseo;guess|adivinar, suponer;forget|olvidar;notice|notar, aviso;realize|darse cuenta;recognize|reconocer;wonder|preguntarse, maravilla;worry|preocuparse;fear|temer, miedo;hate|odiar, odio;enjoy|disfrutar;prefer|preferir;trust|confiar, confianza;doubt|dudar, duda;promise|prometer, promesa;apologize|disculparse;forgive|perdonar;thank|agradecer;welcome|dar la bienvenida;greet|saludar;invite|invitar;celebrate|celebrar",
+
+      // Bloque 9 (801 - 900)
+      "describe|describir;discuss|discutir, conversar;mention|mencionar;state|afirmar, estado;claim|afirmar, reclamo;prove|demostrar, probar;confirm|confirmar;deny|negar;admit|admitir;announce|anunciar;inform|informar;warn|advertir;advise|aconsejar;recommend|recomendar;encourage|animar, fomentar;persuade|persuadir;convince|convencer;remind|recordar a alguien;repeat|repetir;reply|responder;respond|responder;whisper|susurrar;shout|gritar;scream|gritar (pánico);listen|escuchar;observe|observar;stare|mirar fijamente;glance|echar un vistazo;appear|aparecer;disappear|desaparecer;exist|existir;survive|sobrevivir;breathe|respirar;bleed|sangrar;heal|sanar, curar;hurt|doler, herir;injure|lesionar;suffer|sufrir;cough|toser, tos;sneeze|estornudar;faint|desmayarse;wake|despertar;yawn|bostezar;stretch|estirar;bend|doblar, inclinarse;kneel|arrodillarse;lean|inclinarse, apoyarse;shake|sacudir, agitar;wave|saludar con mano, ola;nod|asentir;point|señalar;grab|agarrar;drop|dejar caer, gota;lift|levantar, ascensor;kick|patear, patada;hit|golpear, éxito;beat|vencer, latir;strike|golpear, huelga;bite|morder, mordida;chew|masticar;swallow|tragar;taste|probar, sabor;smell|oler, olor;burn|quemar, quemadura;freeze|congelar;melt|derretir;boil|hervir;pour|verter, servir;spill|derramar;mix|mezclar, mezcla;stir|revolver;slice|rebanar, rebanada;chop|picar, cortar;peel|pelar, cáscara;fry|freír;roast|asar;grill|asar a la parrilla;serve|servir;order|pedir;deliver|entregar;collect|recoger, coleccionar;gather|reunir;spread|extender, untar;divide|dividir;multiply|multiplicar;count|contar;measure|medir, medida;weigh|pesar;calculate|calcular;estimate|estimar;solve|resolver;manage|administrar, lograr;organize|organizar;arrange|organizar, arreglar;schedule|programar, horario;cancel|cancelar;delay|retrasar, retraso;postpone|posponer;complete|completar, completo",
+
+      // Bloque 10 (901 - 1000)
+      "finish|terminar, acabado;achieve|lograr, alcanzar;succeed|tener éxito;fail|fallar, fracasar;miss|extrañar, perder;skip|saltar, omitir;repeat|repetir;review|revisar, reseña;focus|enfocarse, enfoque;concentrate|concentrarse;attend|asistir;participate|participar;compete|competir;cooperate|cooperar;contribute|contribuir;support|apoyar;assist|ayudar, asistir;guide|guiar, guía;direct|dirigir, directo;instruct|instruir;teach|enseñar;train|entrenar, tren;educate|educar;graduate|graduarse;apply|aplicar, postularse;hire|contratar;employ|emplear;fire|despedir;retire|jubilarse;resign|renunciar;earn|ganar (dinero);borrow|pedir prestado;lend|prestar;owe|deber;afford|permitirse pagar;invest|invertir;charge|cobrar, cargar;refund|reembolsar;exchange|intercambiar;trade|comerciar;negotiate|negociar;sign|firmar;publish|publicar;print|imprimir;copy|copiar, copia;paste|pegar;delete|borrar, eliminar;edit|editar;upload|subir (archivo);download|descargar;install|instalar;update|actualizar;connect|conectar;disconnect|desconectar;login|iniciar sesión;search|buscar;browse|navegar;click|hacer clic;scroll|desplazar;type|teclear;record|grabar;capture|capturar;stream|transmitir;broadcast|transmitir;communicate|comunicar;contact|contactar, contacto;translate|traducir;interpret|interpretar;spell|deletrear, hechizo;pronounce|pronunciar;define|definir;summarize|resumir;quote|citar, cita;cite|citar;reference|referenciar;analyze|analizar;evaluate|evaluar;assess|evaluar;judge|juzgar, juez;criticize|criticar;praise|elogiar, alabanza;blame|culpar, culpa;accuse|acusar;arrest|arrestar;punish|castigar;reward|recompensar, premio;respect|respetar, respeto;admire|admirar;envy|envidiar, envidia;regret|arrepentirse;relieve|aliviar;comfort|consolar, comodidad;calm|calmar, calma;relax|relajarse;entertain|entretener;amuse|divertir;surprise|sorprender, sorpresa;shock|conmocionar;confuse|confundir;annoy|molestar;bother|molestar",
+
+      // Bloque 11 (1001 - 1100)
+      "angry|enojado;sad|triste;glad|contento;excited|emocionado;nervous|nervioso;anxious|ansioso;scared|asustado;afraid|temeroso;tired|cansado;sleepy|soñoliento;hungry|hambriento;thirsty|sediento;sick|enfermo;ill|enfermo;healthy|saludable;fit|en forma, encajar;weak|débil;tired|agotado;bored|aburrido;boring|aburrido (cosa);interesting|interesante;amazing|asombroso;awesome|genial, increíble;wonderful|maravilloso;terrible|terrible;horrible|horrible;awful|horrible;excellent|excelente;perfect|perfecto;brilliant|brillante;smart|inteligente, listo;clever|astuto, listo;wise|sabio;stupid|estúpido;silly|tonto;crazy|loco;funny|gracioso;weird|raro, extraño;strange|extraño;unusual|inusual;normal|normal;ordinary|ordinario;regular|regular;rare|raro, poco común;unique|único;famous|famoso;unknown|desconocido;familiar|familiar;friendly|amigable;polite|educado, cortés;rude|grosero;honest|honesto;loyal|leal;brave|valiente;shy|tímido;proud|orgulloso;humble|humilde;generous|generoso;selfish|egoísta;greedy|codicioso;lazy|perezoso;busy|ocupado;active|activo;calm|tranquilo;gentle|suave, gentil;strict|estricto;fair|justo, feria;unfair|injusto;guilty|culpable;innocent|inocente;lucky|afortunado;unlucky|desafortunado;successful|exitoso;wealthy|adinerado;cheap|barato;expensive|caro;valuable|valioso;worthless|sin valor;useful|útil;useless|inútil;helpful|servicial;harmful|dañino;dangerous|peligroso;secure|seguro;careful|cuidadoso;careless|descuidado;modern|moderno;ancient|antiguo;fresh|fresco;rotten|podrido;raw|crudo;ripe|maduro;sweet|dulce;sour|agrio;bitter|amargo;salty|salado;spicy|picante;delicious|delicioso;tasty|sabroso;disgusting|asqueroso",
+
+      // Bloque 12 (1101 - 1200)
+      "loud|ruidoso, fuerte;silent|silencioso;bright|brillante;dim|tenue;shiny|reluciente;dull|opaco, aburrido;smooth|suave, liso;rough|áspero, rudo;soft|suave, blando;hard|duro;sharp|afilado, agudo;blunt|desafilado;thick|grueso, espeso;thin|delgado, fino;narrow|estrecho;broad|amplio;tall|alto;tiny|diminuto;giant|gigante;massive|masivo;empty|vacío;crowded|lleno de gente;tight|apretado, ajustado;loose|suelto, flojo;wet|mojado;damp|húmedo;warm|cálido;cool|fresco, genial;freezing|helado;boiling|hirviendo;sunny|soleado;cloudy|nublado;rainy|lluvioso;windy|ventoso;snowy|nevado;foggy|con niebla;stormy|tormentoso;straight|recto, derecho;curved|curvo;round|redondo, ronda;square|cuadrado, plaza;flat|plano, departamento;steep|empinado;hollow|hueco;solid|sólido;liquid|líquido;gas|gas, gasolina;wooden|de madera;metal|metal;plastic|plástico;golden|dorado;silver|plateado, plata;red|rojo;yellow|amarillo;orange|naranja;purple|morado;pink|rosa;brown|marrón, café;black|negro;white|blanco;gray|gris;alive|vivo;awake|despierto;asleep|dormido;pregnant|embarazada;married|casado;divorced|divorciado;widowed|viudo;male|masculino;female|femenino;adult|adulto;senior|mayor, sénior;junior|menor, júnior;native|nativo;fluent|fluido;bilingual|bilingüe;blind|ciego;deaf|sordo;mute|mudo;disabled|discapacitado;accurate|preciso;exact|exacto;approximate|aproximado;specific|específico;particular|particular;obvious|obvio;apparent|aparente;visible|visible;invisible|invisible;hidden|oculto;secret|secreto;official|oficial;formal|formal;informal|informal;casual|casual;basic|básico;advanced|avanzado;complex|complejo;complicated|complicado;impossible|imposible;necessary|necesario",
+
+      // Bloque 13 (1201 - 1300)
+      "essential|esencial;vital|vital;crucial|crucial;urgent|urgente;immediate|inmediato;sudden|repentino;gradual|gradual;constant|constante;permanent|permanente;temporary|temporal;brief|breve;annual|anual;monthly|mensual;weekly|semanal;daily|diario;hourly|cada hora;frequent|frecuente;occasional|ocasional;initial|inicial;previous|anterior;following|siguiente;eventual|eventual;ultimate|definitivo;maximum|máximo;minimum|mínimo;average|promedio;total|total;equal|igual;opposite|opuesto;reverse|inverso, reversa;separate|separado, separar;combined|combinado;independent|independiente;dependent|dependiente;responsible|responsable;capable|capaz;willing|dispuesto;eager|ansioso, deseoso;curious|curioso;aware|consciente;conscious|consciente;confident|seguro de sí;grateful|agradecido;thankful|agradecido;sorry|arrepentido;ashamed|avergonzado;embarrassed|avergonzado;jealous|celoso;lonely|solitario;desperate|desesperado;hopeful|esperanzado;optimistic|optimista;pessimistic|pesimista;realistic|realista;practical|práctico;logical|lógico;reasonable|razonable;creative|creativo;talented|talentoso;skilled|hábil;experienced|experimentado;professional|profesional;amateur|aficionado;academic|académico;scientific|científico;technical|técnico;digital|digital;electronic|electrónico;automatic|automático;manual|manual;virtual|virtual;online|en línea;offline|sin conexión;wireless|inalámbrico;mobile|móvil;portable|portátil;global|global;regional|regional;urban|urbano;rural|rural;domestic|doméstico;commercial|comercial;industrial|industrial;agricultural|agrícola;military|militar;civil|civil;federal|federal;royal|real (realeza);historic|histórico;classic|clásico;typical|típico;standard|estándar;original|original;authentic|auténtico;fake|falso;artificial|artificial",
+
+      // Bloque 14 (1301 - 1400)
+      "kitchen|cocina;bedroom|dormitorio;bathroom|baño;living room|sala de estar;garage|garaje;garden|jardín;yard|patio;balcony|balcón;roof|techo;ceiling|techo interior;basement|sótano;attic|ático;hallway|pasillo;stairs|escaleras;elevator|ascensor;gate|portón, puerta;fence|cerca, valla;key|llave, clave;lock|cerradura, cerrar;chair|silla;sofa|sofá;couch|sofá;desk|escritorio;shelf|estante;cabinet|gabinete;drawer|cajón;closet|armario;wardrobe|ropero;mirror|espejo;lamp|lámpara;curtain|cortina;carpet|alfombra;rug|tapete;pillow|almohada;blanket|manta, cobija;sheet|sábana, hoja;mattress|colchón;towel|toalla;soap|jabón;shampoo|champú;toothbrush|cepillo de dientes;toothpaste|pasta de dientes;comb|peine;brush|cepillo;razor|navaja, rastrillo;sink|fregadero, lavabo;faucet|grifo, llave;shower|ducha, regadera;bathtub|bañera;toilet|inodoro;stove|estufa;oven|horno;microwave|microondas;fridge|refrigerador;freezer|congelador;dishwasher|lavavajillas;washing machine|lavadora;dryer|secadora;iron|plancha, hierro;vacuum|aspiradora;broom|escoba;mop|trapeador;bucket|cubeta;trash|basura;garbage|basura;plate|plato;bowl|tazón;mug|taza;fork|tenedor;knife|cuchillo;spoon|cuchara;napkin|servilleta;pot|olla;pan|sartén;kettle|tetera;bottle|botella;jar|frasco;can|lata;lid|tapa;bag|bolsa;basket|canasta;clock|reloj de pared;calendar|calendario;candle|vela;match|fósforo, partido;battery|batería, pila;plug|enchufe;cable|cable;wire|alambre, cable;switch|interruptor;screen|pantalla;keyboard|teclado;mouse|ratón;printer|impresora;speaker|altavoz;headphones|audífonos;camera|cámara;charger|cargador;remote|control remoto",
+
+      // Bloque 15 (1401 - 1500)
+      "food|comida;meal|comida;breakfast|desayuno;lunch|almuerzo;dinner|cena;snack|bocadillo;dessert|postre;bread|pan;toast|pan tostado;butter|mantequilla;cheese|queso;milk|leche;cream|crema;yogurt|yogur;egg|huevo;meat|carne;beef|carne de res;pork|cerdo;chicken|pollo;turkey|pavo;bacon|tocino;ham|jamón;sausage|salchicha;fish|pescado, pez;salmon|salmón;tuna|atún;shrimp|camarón;rice|arroz;pasta|pasta;noodle|fideo;soup|sopa;salad|ensalada;sandwich|sándwich;burger|hamburguesa;pizza|pizza;steak|filete;sauce|salsa;oil|aceite;vinegar|vinagre;salt|sal;pepper|pimienta;sugar|azúcar;honey|miel;jam|mermelada;flour|harina;cereal|cereal;oat|avena;bean|frijol;pea|guisante;corn|maíz;potato|papa, patata;tomato|tomate;onion|cebolla;garlic|ajo;carrot|zanahoria;lettuce|lechuga;spinach|espinaca;broccoli|brócoli;cucumber|pepino;mushroom|champiñón;fruit|fruta;apple|manzana;banana|plátano;grape|uva;strawberry|fresa;lemon|limón;lime|lima;peach|durazno;pear|pera;cherry|cereza;watermelon|sandía;pineapple|piña;mango|mango;avocado|aguacate;nut|nuez;peanut|cacahuate;almond|almendra;chocolate|chocolate;candy|dulce, caramelo;cake|pastel;pie|pay, tarta;cookie|galleta;ice cream|helado;coffee|café;tea|té;juice|jugo;soda|refresco;beer|cerveza;wine|vino;cocktail|cóctel;menu|menú;waiter|mesero;tip|propina, consejo;receipt|recibo;recipe|receta;ingredient|ingrediente;flavor|sabor;diet|dieta;nutrition|nutrición;appetite|apetito",
+
+      // Bloque 16 (1501 - 1600)
+      "clothes|ropa;shirt|camisa;t-shirt|camiseta;blouse|blusa;sweater|suéter;jacket|chaqueta;coat|abrigo;suit|traje;dress|vestido;skirt|falda;pants|pantalones;jeans|mezclilla;shorts|pantalones cortos;underwear|ropa interior;sock|calcetín;shoe|zapato;boot|bota;sneaker|tenis, zapatilla;sandal|sandalia;heel|tacón, talón;hat|sombrero;cap|gorra;scarf|bufanda;glove|guante;belt|cinturón;tie|corbata;pocket|bolsillo;button|botón;zipper|cremallera;sleeve|manga;collar|cuello de camisa;fabric|tela;cotton|algodón;wool|lana;silk|seda;leather|cuero;ring|anillo;necklace|collar;earring|arete;bracelet|pulsera;watch|reloj de pulso;glasses|lentes, gafas;sunglasses|gafas de sol;wallet|cartera;purse|bolso;backpack|mochila;suitcase|maleta;umbrella|paraguas;fashion|moda;style|estilo;brand|marca;shop|tienda, comprar;mall|centro comercial;supermarket|supermercado;bakery|panadería;pharmacy|farmacia;butcher|carnicería;barber|barbero;salon|salón de belleza;customer|cliente;client|cliente;cashier|cajero;manager|gerente;boss|jefe;employee|empleado;colleague|colega;partner|socio, pareja;assistant|asistente;secretary|secretario;engineer|ingeniero;architect|arquitecto;scientist|científico;nurse|enfermero;dentist|dentista;surgeon|cirujano;pharmacist|farmacéutico;vet|veterinario;pilot|piloto;driver|conductor;mechanic|mecánico;electrician|electricista;plumber|plomero;carpenter|carpintero;farmer|granjero;chef|chef;baker|panadero;journalist|periodista;reporter|reportero;photographer|fotógrafo;designer|diseñador;programmer|programador;accountant|contador;banker|banquero;soldier|soldado;firefighter|bombero;guard|guardia;detective|detective;judge|juez;mayor|alcalde;politician|político",
+
+      // Bloque 17 (1601 - 1700)
+      "face|rostro;hair|pelo;forehead|frente;eyebrow|ceja;eyelash|pestaña;ear|oído, oreja;nose|nariz;cheek|mejilla;mouth|boca;lip|labio;tooth|diente;tongue|lengua;chin|barbilla;jaw|mandíbula;neck|cuello;throat|garganta;shoulder|hombro;chest|pecho;breast|seno;stomach|estómago;belly|vientre;waist|cintura;hip|cadera;back|espalda;spine|columna;elbow|codo;wrist|muñeca;finger|dedo;thumb|pulgar;nail|uña, clavo;palm|palma;fist|puño;thigh|muslo;knee|rodilla;ankle|tobillo;toe|dedo del pie;skin|piel;bone|hueso;muscle|músculo;nerve|nervio;brain|cerebro;lung|pulmón;liver|hígado;kidney|riñón;vein|vena;pulse|pulso;breath|aliento;sweat|sudor;tear|lágrima;fever|fiebre;headache|dolor de cabeza;toothache|dolor de muelas;cold|resfriado;flu|gripe;allergy|alergia;infection|infección;virus|virus;bacteria|bacteria;cancer|cáncer;pain|dolor;ache|dolor;wound|herida;scar|cicatriz;bruise|moretón;rash|sarpullido;medicine|medicina;pill|pastilla;tablet|tableta;vaccine|vacuna;injection|inyección;bandage|venda;surgery|cirugía;therapy|terapia;clinic|clínica;ambulance|ambulancia;emergency|emergencia;symptom|síntoma;diagnosis|diagnóstico;prescription|receta médica;recovery|recuperación;family|familia;relative|pariente;grandfather|abuelo;grandmother|abuela;grandchild|nieto;uncle|tío;aunt|tía;cousin|primo;nephew|sobrino;niece|sobrina;twin|gemelo;bride|novia (boda);groom|novio (boda);wedding|boda;marriage|matrimonio;divorce|divorcio;neighbor|vecino;guest|invitado;stranger|desconocido;enemy|enemigo",
+
+      // Bloque 18 (1701 - 1800)
+      "earth|tierra;world|mundo;planet|planeta;sun|sol;moon|luna;sky|cielo;cloud|nube;rain|lluvia;snow|nieve;ice|hielo;hail|granizo;frost|escarcha;wind|viento;breeze|brisa;storm|tormenta;thunder|trueno;lightning|relámpago;hurricane|huracán;tornado|tornado;flood|inundación;drought|sequía;earthquake|terremoto;volcano|volcán;weather|clima;climate|clima (región);temperature|temperatura;heat|calor;shade|sombra;shadow|sombra;rainbow|arcoíris;sunrise|amanecer;sunset|atardecer;dawn|alba;dusk|crepúsculo;spring|primavera, resorte;autumn|otoño;winter|invierno;mountain|montaña;hill|colina;valley|valle;cliff|acantilado;cave|cueva;rock|roca;stone|piedra;sand|arena;mud|lodo;dirt|tierra, suciedad;soil|suelo;dust|polvo;island|isla;beach|playa;coast|costa;shore|orilla;ocean|océano;sea|mar;wave|ola;tide|marea;river|río;stream|arroyo;lake|lago;pond|estanque;waterfall|cascada;forest|bosque;woods|bosque;jungle|selva;desert|desierto;field|campo;meadow|pradera;grass|césped;bush|arbusto;branch|rama;leaf|hoja;root|raíz;seed|semilla;flower|flor;rose|rosa;pet|mascota;cat|gato;bird|pájaro;horse|caballo;cow|vaca;pig|cerdo;sheep|oveja;goat|cabra;duck|pato;goose|ganso;rabbit|conejo;rat|rata;squirrel|ardilla;deer|ciervo;bear|oso;wolf|lobo;fox|zorro;lion|león;tiger|tigre;elephant|elefante;monkey|mono;snake|serpiente;frog|rana;turtle|tortuga;shark|tiburón;whale|ballena;dolphin|delfín;bee|abeja;ant|hormiga;spider|araña;butterfly|mariposa;mosquito|mosquito",
+
+      // Bloque 19 (1801 - 1900)
+      "city|ciudad;village|aldea;suburb|suburbio;neighborhood|vecindario;downtown|centro;avenue|avenida;boulevard|bulevar;lane|carril;highway|carretera;bridge|puente;tunnel|túnel;corner|esquina;intersection|intersección;crosswalk|cruce peatonal;sidewalk|acera;traffic|tráfico;signal|señal;park|parque, estacionar;plaza|plaza;fountain|fuente;statue|estatua;monument|monumento;museum|museo;gallery|galería;library|biblioteca;theater|teatro;cinema|cine;stadium|estadio;arena|estadio, arena;gym|gimnasio;pool|piscina;zoo|zoológico;hotel|hotel;motel|motel;resort|complejo turístico;restaurant|restaurante;cafe|cafetería;bar|bar;pub|pub;club|club;casino|casino;factory|fábrica;warehouse|almacén;farm|granja;barn|granero;airport|aeropuerto;harbor|puerto;port|puerto;terminal|terminal;platform|andén;bus|autobús;train|tren;subway|metro;tram|tranvía;taxi|taxi;truck|camión;van|camioneta;motorcycle|motocicleta;bicycle|bicicleta;bike|bici;scooter|patinete;airplane|avión;plane|avión;helicopter|helicóptero;rocket|cohete;ship|barco;boat|bote;ferry|ferri;yacht|yate;submarine|submarino;wheel|rueda;tire|llanta;engine|motor;brake|freno;gear|engranaje, marcha;seatbelt|cinturón;mirror|espejo;trunk|cajuela, tronco;fuel|combustible;gasoline|gasolina;ticket|boleto;passport|pasaporte;visa|visa;luggage|equipaje;baggage|equipaje;customs|aduana;border|frontera;map|mapa;compass|brújula;route|ruta;path|sendero;trail|sendero;track|pista, vía;journey|viaje;trip|viaje;tour|recorrido;vacation|vacaciones;holiday|feriado, vacaciones;flight|vuelo;cruise|crucero",
+
+      // Bloque 20 (1901 - 2000)
+      "school|escuela;university|universidad;campus|campus;classroom|aula;lesson|lección;lecture|conferencia;homework|tarea;assignment|tarea;exam|examen;quiz|cuestionario;grade|calificación, grado;score|puntuación;diploma|diploma;scholarship|beca;tuition|matrícula;student|estudiante;pupil|alumno;principal|director escolar;notebook|cuaderno;textbook|libro de texto;dictionary|diccionario;encyclopedia|enciclopedia;pen|pluma, bolígrafo;pencil|lápiz;eraser|borrador;ruler|regla;scissors|tijeras;glue|pegamento;tape|cinta;chalk|tiza;marker|marcador;folder|carpeta;envelope|sobre;stamp|sello, estampilla;math|matemáticas;science|ciencia;physics|física;chemistry|química;biology|biología;geography|geografía;literature|literatura;grammar|gramática;vocabulary|vocabulario;poem|poema;novel|novela;chapter|capítulo;sentence|oración;paragraph|párrafo;essay|ensayo;report|reporte;speech|discurso;debate|debate;presentation|presentación;soccer|fútbol;football|fútbol americano;basketball|baloncesto;baseball|béisbol;tennis|tenis;golf|golf;volleyball|voleibol;hockey|hockey;boxing|boxeo;swimming|natación;running|correr;cycling|ciclismo;skiing|esquí;surfing|surf;yoga|yoga;ball|pelota;bat|bate, murciélago;racket|raqueta;net|red;helmet|casco;medal|medalla;trophy|trofeo;champion|campeón;coach|entrenador;referee|árbitro;fan|aficionado, ventilador;audience|audiencia;crowd|multitud;concert|concierto;festival|festival;band|banda;orchestra|orquesta;guitar|guitarra;piano|piano;drum|tambor;violin|violín;flute|flauta;trumpet|trompeta;rhythm|ritmo;melody|melodía;lyrics|letra de canción;painting|pintura;sculpture|escultura;drawing|dibujo;craft|artesanía;hobby|pasatiempo;puzzle|rompecabezas;chess|ajedrez;card|tarjeta, carta;dice|dados;toy|juguete;doll|muñeca;gift|regalo;present|regalo, presente;balloon|globo;firework|fuego artificial;magic|magia;miracle|milagro;luck|suerte;fate|destino;destiny|destino;soul|alma;spirit|espíritu;ghost|fantasma;angel|ángel;devil|diablo;god|dios;heaven|cielo;hell|infierno;faith|fe;prayer|oración;religion|religión;peace|paz;freedom|libertad;justice|justicia;equality|igualdad;democracy|democracia;economy|economía;poverty|pobreza;wealth|riqueza;charity|caridad;volunteer|voluntario;habit|hábito;routine|rutina;tradition|tradición;custom|costumbre;manner|modales;attitude|actitud;mood|estado de ánimo;emotion|emoción;passion|pasión;desire|deseo;pleasure|placer;joy|alegría;happiness|felicidad;sadness|tristeza;anger|ira;fear|miedo;anxiety|ansiedad;stress|estrés;relief|alivio;pride|orgullo;shame|vergüenza;guilt|culpa;courage|valentía;patience|paciencia;wisdom|sabiduría;memory|memoria;imagination|imaginación;creativity|creatividad;intelligence|inteligencia;talent|talento;genius|genio;mistake|error;error|error;fault|culpa, falla;blame|culpa;excuse|excusa;apology|disculpa;favor|favor;advice|consejo;suggestion|sugerencia;opinion|opinión;belief|creencia;theory|teoría;concept|concepto;principle|principio;method|método;technique|técnica;solution|solución;secret|secreto;mystery|misterio;clue|pista;evidence|evidencia;proof|prueba;detail|detalle;summary|resumen;conclusion|conclusión;introduction|introducción;beginning|comienzo;middle|medio;ending|final;edge|borde;surface|superficie;bottom|fondo;depth|profundidad;height|altura;width|anchura;length|longitud;weight|peso;volume|volumen;speed|velocidad;distance|distancia;direction|dirección;location|ubicación;destination|destino;origin|origen;background|fondo, historial;context|contexto;purpose|propósito;mission|misión;vision|visión;target|objetivo;limit|límite;boundary|frontera;barrier|barrera;obstacle|obstáculo;challenge|desafío;difficulty|dificultad;trouble|problema;crisis|crisis;disaster|desastre;accident|accidente;danger|peligro;threat|amenaza;safety|seguridad;protection|protección;shelter|refugio;rescue|rescate;escape|escape;victory|victoria;defeat|derrota;progress|progreso;advance|avance;innovation|innovación;invention|invención;discovery|descubrimiento;creation|creación;destruction|destrucción;damage|daño;harm|daño;benefit|beneficio;advantage|ventaja;disadvantage|desventaja;profit|ganancia;budget|presupuesto;debt|deuda;loan|préstamo;credit|crédito;cash|efectivo;coin|moneda;currency|divisa;salary|salario;wage|sueldo;income|ingreso;expense|gasto;fee|tarifa;fine|multa;discount|descuento;bargain|ganga;contract|contrato;agreement|acuerdo;promise|promesa;guarantee|garantía;warranty|garantía;insurance|seguro;patent|patente;copyright|derechos de autor;license|licencia;permit|permiso;certificate|certificado;document|documento;file|archivo;record|registro;database|base de datos;network|red;internet|internet;website|sitio web;software|software;hardware|hardware;app|aplicación;device|dispositivo;gadget|aparato;machine|máquina;tool|herramienta;instrument|instrumento;equipment|equipo;gear|equipo;weapon|arma;hammer|martillo;screwdriver|destornillador;wrench|llave inglesa;saw|sierra;drill|taladro;nail|clavo;screw|tornillo;rope|cuerda;chain|cadena;hook|gancho;needle|aguja;thread|hilo;pin|alfiler;clip|clip;box|caja;container|contenedor;package|paquete;parcel|paquete;envelope|sobre;label|etiqueta;tag|etiqueta;barcode|código de barras;code|código;password|contraseña;symbol|símbolo;logo|logotipo;flag|bandera;banner|pancarta;poster|póster;brochure|folleto;magazine|revista;newspaper|periódico;journal|diario;diary|diario personal;blog|blog;podcast|pódcast;video|video;audio|audio;photo|foto;portrait|retrato;landscape|paisaje;frame|marco;album|álbum;channel|canal;episode|episodio;trailer|tráiler;review|reseña;rating|calificación;comment|comentario;feedback|retroalimentación;poll|encuesta;survey|encuesta;vote|voto;ballot|boleta;citizen|ciudadano;resident|residente;immigrant|inmigrante;refugee|refugiado;tourist|turista;passenger|pasajero;pedestrian|peatón;witness|testigo;victim|víctima;suspect|sospechoso;criminal|criminal;thief|ladrón;prisoner|prisionero;prison|prisión;jail|cárcel;trial|juicio;verdict|veredicto;sentence|sentencia;jury|jurado;attorney|abogado;client|cliente;hero|héroe;villain|villano;legend|leyenda;myth|mito;tale|relato;fable|fábula;joke|chiste;humor|humor;irony|ironía;sarcasm|sarcasmo;tone|tono;accent|acento;dialect|dialecto;slang|jerga;phrase|frase;idiom|modismo;proverb|proverbio;metaphor|metáfora;rhyme|rima;echo|eco;whisper|susurro;silence|silencio;noise|ruido;chaos|caos;harmony|armonía;balance|equilibrio;symmetry|simetría;pattern|patrón;texture|textura;shape|forma;angle|ángulo;circle|círculo;triangle|triángulo;rectangle|rectángulo;line|línea;curve|curva;dot|punto;spot|mancha, lugar;stain|mancha;mark|marca;scratch|rasguño;crack|grieta;hole|agujero;gap|brecha;space|espacio;zone|zona;district|distrito;province|provincia;state|estado;country|país;continent|continente;hemisphere|hemisferio;globe|globo terráqueo;universe|universo;galaxy|galaxia;comet|cometa;asteroid|asteroide;orbit|órbita;gravity|gravedad;oxygen|oxígeno;carbon|carbono;hydrogen|hidrógeno;nitrogen|nitrógeno;atom|átomo;molecule|molécula;cell|célula;gene|gen;dna|adn;evolution|evolución;species|especie;ecosystem|ecosistema;habitat|hábitat;pollution|contaminación;recycling|reciclaje;waste|desperdicio;solar|solar;nuclear|nuclear;electric|eléctrico;magnetic|magnético;chemical|químico;organic|orgánico;synthetic|sintético;toxic|tóxico;pure|puro;natural|natural;wild|salvaje;tame|manso;extinct|extinto;endangered|en peligro"
+    ];
+
+    /**
+     * =========================================================================
+     * 2. PARSEO DE LAS 2,000 PALABRAS BASE (EXACTAMENTE 2,000 ÚNICAS)
+     * =========================================================================
+     */
+    function buildBaseDictionary() {
+      const seen = new Set();
+      const list = [];
+      const fullStr = RAW_VOCAB_CHUNKS.join(';');
+      const entries = fullStr.split(';');
+      let rank = 1;
+
+      for (const entry of entries) {
+        if (list.length >= 2000) break;
+        const parts = entry.split('|');
+        if (parts.length < 2) continue;
+        const en = parts[0].trim();
+        const es = parts[1].trim();
+        const key = en.toLowerCase();
+        if (!en || !es || seen.has(key)) continue;
+        seen.add(key);
+        list.push({
+          id: `base_${rank}`,
+          rank: rank,
+          en,
+          es,
+          custom: false
+        });
+        rank++;
+      }
+      return list;
+    }
+
+    const BASE_WORDS = buildBaseDictionary();
+
+    /**
+     * =========================================================================
+     * 3. ESTADO GLOBAL Y PERSISTENCIA EN LOCALSTORAGE
+     * =========================================================================
+     */
+    const STORAGE_KEY = 'ankiflow_2000_v1';
+
+    const DEFAULT_STATE = {
+      progress: {},        // { wordId: { reps, interval, ease, due, lapses } }
+      customWords: [],     // [ { id, rank, en, es, custom: true } ]
+      settings: {
+        dailyNewLimit: 20,
+        autoplay: true,
+        voiceURI: '',
+        mode: 'listen_word', // 'listen_only' | 'listen_word' | 'write' | 'speak'
+        block: 'all'
+      },
+      stats: {
+        totalReviews: 0,
+        correctReviews: 0,
+        streak: 0,
+        lastStudyDate: null,
+        todayDate: null,
+        todayNewCount: 0,
+        todayReviewCount: 0
+      }
+    };
+
+    let state = loadState();
+    let allWords = [];
+    let currentCard = null;
+    let isRevealed = false;
+    let writeResult = null;     // null | 'correct' | 'wrong'
+    let writeHintLevel = 0;
+    let speakHideEnglish = false;
+    let speakResult = null;     // null | { ok: bool, transcript: string }
+    let isListeningMic = false;
+    let recognition = null;
+
+    // Paginación diccionario
+    let dictPage = 1;
+    const DICT_PER_PAGE = 50;
+
+    function getTodayISO() {
+      const d = new Date();
+      return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    }
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return JSON.parse(JSON.stringify(DEFAULT_STATE));
+        const parsed = JSON.parse(raw);
+        return {
+          progress: parsed.progress || {},
+          customWords: Array.isArray(parsed.customWords) ? parsed.customWords : [],
+          settings: { ...DEFAULT_STATE.settings, ...(parsed.settings || {}) },
+          stats: { ...DEFAULT_STATE.stats, ...(parsed.stats || {}) }
+        };
+      } catch (e) {
+        console.error('Error cargando estado:', e);
+        return JSON.parse(JSON.stringify(DEFAULT_STATE));
+      }
+    }
+
+    function saveState() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+      } catch (e) {
+        showToast('No se pudo guardar en localStorage (espacio lleno).', 'error');
+      }
+    }
+
+    function refreshAllWords() {
+      allWords = [...BASE_WORDS, ...state.customWords];
+      document.getElementById('header-total-words').textContent = allWords.length.toLocaleString('es-ES');
+    }
+
+    function checkDailyRollover() {
+      const today = getTodayISO();
+      if (state.stats.todayDate !== today) {
+        // Verificar continuidad de racha
+        if (state.stats.lastStudyDate) {
+          const last = new Date(state.stats.lastStudyDate + 'T00:00:00');
+          const curr = new Date(today + 'T00:00:00');
+          const diffDays = Math.round((curr - last) / 86400000);
+          if (diffDays > 1) {
+            state.stats.streak = 0;
+          }
+        }
+        state.stats.todayDate = today;
+        state.stats.todayNewCount = 0;
+        state.stats.todayReviewCount = 0;
+        saveState();
+      }
+      document.getElementById('header-streak').textContent = state.stats.streak;
+    }
+
+    /**
+     * =========================================================================
+     * 4. ALGORITMO SRS SM-2 (ESTILO ANKI)
+     * =========================================================================
+     */
+    function getCardProgress(wordId) {
+      return state.progress[wordId] || {
+        reps: 0,
+        interval: 0, // días
+        ease: 2.5,
+        due: 0,
+        lapses: 0
+      };
+    }
+
+    function getCardStatus(wordId) {
+      const p = state.progress[wordId];
+      if (!p || (p.reps === 0 && p.lapses === 0 && p.due === 0)) return 'new';
+      if (p.interval >= 21) return 'mastered';
+      return 'learning';
+    }
+
+    /**
+     * Calcula el próximo estado SM-2 dado un rating:
+     * 1 = Otra vez (Again)
+     * 2 = Difícil (Hard)
+     * 3 = Bien (Good)
+     * 4 = Fácil (Easy)
+     */
+    function previewSM2(p, rating) {
+      const now = Date.now();
+      let { reps, interval, ease, lapses } = p;
+      ease = ease || 2.5;
+
+      if (rating === 1) {
+        // Reinicia a < 1 minuto
+        return {
+          reps: 0,
+          interval: 0,
+          ease: Math.max(1.3, ease - 0.2),
+          lapses: (lapses || 0) + 1,
+          due: now + 60 * 1000,
+          label: '<1 min'
+        };
+      }
+
+      if (reps === 0) {
+        if (rating === 2) {
+          interval = 0.007; // ~10 min
+          return { reps: 1, interval: 1, ease: Math.max(1.3, ease - 0.15), lapses, due: now + 10 * 60 * 1000, label: '10 min' };
+        }
+        if (rating === 3) {
+          interval = 1;
+          return { reps: 1, interval, ease, lapses, due: now + 86400000, label: '1 día' };
+        }
+        if (rating === 4) {
+          interval = 4;
+          return { reps: 2, interval, ease: ease + 0.15, lapses, due: now + 4 * 86400000, label: '4 días' };
+        }
+      }
+
+      if (reps === 1) {
+        if (rating === 2) {
+          interval = Math.max(1, Math.round(interval * 1.2));
+          ease = Math.max(1.3, ease - 0.15);
+        } else if (rating === 3) {
+          interval = 6;
+        } else if (rating === 4) {
+          interval = 10;
+          ease = ease + 0.15;
+        }
+      } else {
+        if (rating === 2) {
+          interval = Math.max(1, Math.round(interval * 1.2));
+          ease = Math.max(1.3, ease - 0.15);
+        } else if (rating === 3) {
+          interval = Math.max(1, Math.round(interval * ease));
+        } else if (rating === 4) {
+          interval = Math.max(2, Math.round(interval * ease * 1.3));
+          ease = ease + 0.15;
+        }
+      }
+
+      return {
+        reps: reps + 1,
+        interval,
+        ease: Number(ease.toFixed(2)),
+        lapses,
+        due: now + interval * 86400000,
+        label: formatInterval(interval)
+      };
+    }
+
+    function formatInterval(days) {
+      if (days < 1) return '<1 día';
+      if (days === 1) return '1 día';
+      if (days < 30) return `${days} días`;
+      const months = Math.round(days / 30);
+      if (months < 12) return `${months} ${months === 1 ? 'mes' : 'meses'}`;
+      const years = (days / 365).toFixed(1);
+      return `${years} años`;
+    }
+
+    function rateCurrentCard(rating) {
+      if (!currentCard) return;
+      stopSpeechRecognition();
+
+      const prevStatus = getCardStatus(currentCard.id);
+      const prevProg = getCardProgress(currentCard.id);
+      const next = previewSM2(prevProg, rating);
+
+      state.progress[currentCard.id] = {
+        reps: next.reps,
+        interval: next.interval,
+        ease: next.ease,
+        due: next.due,
+        lapses: next.lapses
+      };
+
+      // Actualizar estadísticas y racha diaria
+      const today = getTodayISO();
+      if (state.stats.lastStudyDate !== today) {
+        if (state.stats.lastStudyDate) {
+          const last = new Date(state.stats.lastStudyDate + 'T00:00:00');
+          const curr = new Date(today + 'T00:00:00');
+          const diff = Math.round((curr - last) / 86400000);
+          state.stats.streak = diff === 1 ? state.stats.streak + 1 : 1;
+        } else {
+          state.stats.streak = 1;
+        }
+        state.stats.lastStudyDate = today;
+      }
+
+      if (prevStatus === 'new') {
+        state.stats.todayNewCount++;
+      }
+      state.stats.todayReviewCount++;
+      state.stats.totalReviews++;
+      if (rating >= 2) state.stats.correctReviews++;
+
+      document.getElementById('header-streak').textContent = state.stats.streak;
+      saveState();
+      pickNextCard();
+    }
+
+    /**
+     * =========================================================================
+     * 5. FILTRADO DE COLA DE ESTUDIO
+     * =========================================================================
+     */
+    function filterByBlock(words, block) {
+      if (block === 'all') return words;
+      if (block === 'custom') return words.filter(w => w.custom);
+      const [min, max] = block.split('-').map(Number);
+      return words.filter(w => !w.custom && w.rank >= min && w.rank <= max);
+    }
+
+    function getStudyQueues() {
+      const pool = filterByBlock(allWords, state.settings.block);
+      const now = Date.now();
+      const due = [];
+      const fresh = [];
+
+      for (const w of pool) {
+        const status = getCardStatus(w.id);
+        if (status === 'new') {
+          fresh.push(w);
+        } else {
+          const p = getCardProgress(w.id);
+          if (p.due <= now) due.push(w);
+        }
+      }
+
+      // Ordenar pendientes por vencimiento más antiguo primero
+      due.sort((a, b) => getCardProgress(a.id).due - getCardProgress(b.id).due);
+
+      const remainingNewAllowance = Math.max(0, state.settings.dailyNewLimit - state.stats.todayNewCount);
+      const availableNew = fresh.slice(0, remainingNewAllowance);
+
+      return { due, availableNew, totalFreshInBlock: fresh.length };
+    }
+
+    function pickNextCard() {
+      stopSpeechRecognition();
+      const { due, availableNew } = getStudyQueues();
+
+      document.getElementById('queue-due-count').textContent = due.length;
+      document.getElementById('queue-new-count').textContent = availableNew.length;
+      document.getElementById('session-done-count').textContent = state.stats.todayReviewCount;
+
+      if (due.length > 0) {
+        currentCard = due[0];
+      } else if (availableNew.length > 0) {
+        currentCard = availableNew[0];
+      } else {
+        currentCard = null;
+      }
+
+      isRevealed = false;
+      writeResult = null;
+      writeHintLevel = 0;
+      speakResult = null;
+
+      renderStudyCard();
+
+      // Reproducción automática en modos de escucha
+      if (currentCard && state.settings.autoplay) {
+        if (state.settings.mode === 'listen_only' || state.settings.mode === 'listen_word') {
+          setTimeout(() => speakWord(currentCard.en, 1.0), 200);
+        }
+      }
+    }
+
+    /**
+     * =========================================================================
+     * 6. SÍNTESIS DE VOZ (TTS) Y RECONOCIMIENTO DE VOZ (STT)
+     * =========================================================================
+     */
+    let availableVoices = [];
+    let currentUtterance = null;   // referencia viva (evita que Chrome/Safari la recoja el GC y corte el audio)
+    let speakTimer = null;
+
+    const normLang = (l) => (l || '').replace('_', '-').toLowerCase(); // Android devuelve "en_US"
+
+    function loadVoices() {
+      if (!('speechSynthesis' in window)) return;
+      const voices = window.speechSynthesis.getVoices() || [];
+      availableVoices = voices.filter(v => normLang(v.lang).startsWith('en'));
+      const select = document.getElementById('setting-voice');
+      if (!select) return;
+      const currentVal = state.settings.voiceURI || '';
+      select.innerHTML = '<option value="">Automática (en-US)</option>';
+      availableVoices.forEach(v => {
+        const opt = document.createElement('option');
+        opt.value = v.voiceURI;
+        opt.textContent = `${v.name} (${v.lang})`;
+        if (v.voiceURI === currentVal) opt.selected = true;
+        select.appendChild(opt);
+      });
+    }
+
+    if ('speechSynthesis' in window) {
+      loadVoices();
+      if (typeof window.speechSynthesis.addEventListener === 'function') {
+        window.speechSynthesis.addEventListener('voiceschanged', loadVoices);
+      } else {
+        window.speechSynthesis.onvoiceschanged = loadVoices;
+      }
+      // Safari/Firefox a veces no disparan "voiceschanged": reintentar unos segundos
+      let tries = 0;
+      const poll = setInterval(() => {
+        tries++;
+        if (availableVoices.length || tries > 20) return clearInterval(poll);
+        loadVoices();
+      }, 250);
+
+      // Desbloquear el audio con el primer toque/clic del usuario (iOS, Safari y Chrome lo exigen)
+      const unlockTTS = () => {
+        try {
+          const u = new SpeechSynthesisUtterance(' ');
+          u.volume = 0;
+          window.speechSynthesis.speak(u);
+        } catch (e) {}
+        document.removeEventListener('click', unlockTTS, true);
+        document.removeEventListener('touchstart', unlockTTS, true);
+        document.removeEventListener('keydown', unlockTTS, true);
+      };
+      document.addEventListener('click', unlockTTS, true);
+      document.addEventListener('touchstart', unlockTTS, true);
+      document.addEventListener('keydown', unlockTTS, true);
+    }
+
+    function pickVoice() {
+      if (!availableVoices.length) loadVoices();
+      if (state.settings.voiceURI) {
+        const found = availableVoices.find(v => v.voiceURI === state.settings.voiceURI);
+        if (found) return found;
+      }
+      return availableVoices.find(v => normLang(v.lang) === 'en-us')
+          || availableVoices.find(v => normLang(v.lang).startsWith('en'))
+          || null;
+    }
+
+    // ---- Respaldo de audio para APK/WebView sin speechSynthesis ----
+    let fallbackAudio = null;
+    function fallbackSpeak(text, rate = 1.0) {
+      try {
+        // 1) Plugins nativos (Capacitor / Cordova), si existen
+        const cap = window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.TextToSpeech;
+        if (cap && cap.speak) { cap.speak({ text, lang: 'en-US', rate, pitch: 1, volume: 1 }).catch(() => {}); return; }
+        if (window.TTS && window.TTS.speak) { window.TTS.speak({ text, locale: 'en-US', rate }, () => {}, () => {}); return; }
+        // 2) Audio en línea (necesita internet)
+        if (fallbackAudio) { try { fallbackAudio.pause(); } catch (e) {} }
+        const a = new Audio('https://translate.google.com/translate_tts?ie=UTF-8&client=tw-ob&tl=en&q=' + encodeURIComponent(text));
+        a.playbackRate = rate;
+        fallbackAudio = a;
+        a.onerror = () => dictionaryAudio(text, rate);
+        const pr = a.play();
+        if (pr && pr.catch) pr.catch(() => dictionaryAudio(text, rate));
+      } catch (e) {
+        dictionaryAudio(text, rate);
+      }
+    }
+
+    async function dictionaryAudio(text, rate) {
+      try {
+        const r = await fetch('https://api.dictionaryapi.dev/v2/entries/en/' + encodeURIComponent(text.trim().toLowerCase()));
+        const data = await r.json();
+        const url = (data[0].phonetics || []).map(p => p.audio).find(Boolean);
+        if (!url) throw new Error('sin audio');
+        const a = new Audio(url);
+        a.playbackRate = rate;
+        fallbackAudio = a;
+        await a.play();
+      } catch (e) {
+        showToast('No se pudo reproducir el audio. Revisa tu conexión a internet.', 'error');
+      }
+    }
+
+    function speakWord(text, rate = 1.0) {
+      // En muchos APK (WebView) no existe speechSynthesis: usar alternativas
+      if (!('speechSynthesis' in window) || typeof SpeechSynthesisUtterance === 'undefined') {
+        fallbackSpeak(text, rate);
+        return;
+      }
+      const synth = window.speechSynthesis;
+      try {
+        clearTimeout(speakTimer);
+        if (synth.speaking || synth.pending) synth.cancel();
+        // Chrome/Safari: speak() justo después de cancel() se queda mudo; esperar un instante
+        speakTimer = setTimeout(() => {
+          try {
+            if (synth.paused) synth.resume();
+            const utter = new SpeechSynthesisUtterance(text);
+            utter.lang = 'en-US';
+            utter.rate = rate;
+            utter.volume = 1;
+            const voice = pickVoice();
+            if (voice) { utter.voice = voice; utter.lang = voice.lang; }
+            utter.onerror = (e) => {
+              if (e.error === 'canceled' || e.error === 'interrupted') return;
+              if (e.error === 'not-allowed') return; // autoplay bloqueado: se oirá al pulsar 🔊
+              fallbackSpeak(text, rate);
+            };
+            // Si el motor no arranca (sin voces instaladas), usar el respaldo
+            let started = false;
+            utter.onstart = () => { started = true; };
+            setTimeout(() => { if (!started && !synth.speaking && !synth.pending) fallbackSpeak(text, rate); }, 1800);
+            currentUtterance = utter;
+            synth.speak(utter);
+          } catch (e) { console.error('Error TTS:', e); }
+        }, 80);
+      } catch (e) {
+        console.error('Error TTS:', e);
+      }
+    }
+
+    function getSpeechRecognitionAPI() {
+      return window.SpeechRecognition || window.webkitSpeechRecognition || null;
+    }
+
+    function normalizeText(str) {
+      return (str || '')
+        .toLowerCase()
+        .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+        .replace(/[^a-z0-9\s']/g, '')
+        .replace(/\s+/g, ' ')
+        .trim();
+    }
+
+    function levenshtein(a, b) {
+      const m = a.length, n = b.length;
+      if (!m) return n; if (!n) return m;
+      let prev = Array.from({ length: n + 1 }, (_, i) => i);
+      for (let i = 1; i <= m; i++) {
+        const cur = [i];
+        for (let j = 1; j <= n; j++) {
+          cur[j] = Math.min(prev[j] + 1, cur[j - 1] + 1, prev[j - 1] + (a[i - 1] === b[j - 1] ? 0 : 1));
+        }
+        prev = cur;
+      }
+      return prev[n];
+    }
+
+    // Palabras que el reconocedor suele confundir (homófonos / números / contracciones)
+    const HOMOPHONES = {
+      'in': ['inn', 'en', 'n', 'and', 'an', 'ing'], 'a': ['uh', 'eh', 'ay', '8'], 'to': ['two', 'too', '2'],
+      'two': ['to', 'too', '2'], 'for': ['four', 'fore', '4'], 'four': ['for', '4'],
+      'one': ['won', '1'], 'be': ['bee', 'b'], 'by': ['buy', 'bye'], 'buy': ['by', 'bye'],
+      'i': ['eye', 'aye', 'ay'], 'eye': ['i'], 'you': ['u', 'ewe', 'yew'], 'are': ['r', 'our'],
+      'or': ['oar', 'ore'], 'no': ['know', 'now'], 'know': ['no'], 'new': ['knew', 'nu'],
+      'right': ['write', 'rite'], 'write': ['right'], 'see': ['sea', 'c'], 'sea': ['see'],
+      'there': ['their', 'theyre'], 'their': ['there'], 'hear': ['here'], 'here': ['hear'],
+      'son': ['sun'], 'sun': ['son'], 'wait': ['weight'], 'weight': ['wait'], 'where': ['wear', 'ware'],
+      'would': ['wood'], 'wood': ['would'], 'your': ['youre', 'yore'], 'its': ['it s', 'its'],
+      'of': ['uv', 'off'], 'at': ['it', 'ad'], 'on': ['an', 'one'], 'an': ['and', 'in', 'on'],
+      'the': ['de', 'da', 'thee', 'duh'], 'and': ['an', 'n', 'end'], 'it': ['at', 'eat'],
+      'he': ['hee', 'hi'], 'she': ['sheep', 'sea'], 'we': ['wee', 'week'], 'my': ['mai', 'mi', 'mine'],
+      'do': ['due', 'dew', 'doo'], 'so': ['sew', 'sow'], 'not': ['knot', 'nut'], 'but': ['butt', 'bud'],
+      'as': ['is', 'us', 'ass'], 'up': ['app', 'op'], 'out': ['at', 'owt'], 'if': ['f', 'iff'],
+      'can': ['khan', 'kin', 'cant'], 'will': ['well', 'wheel'], 'about': ['a boat', 'abou'],
+      'all': ['awl', 'owl', 'oil'], 'other': ['udder', 'another'], 'than': ['then', 'tan'], 'then': ['than', 'ten']
+    };
+    const NUMBER_WORDS = { '0': 'zero', '1': 'one', '2': 'two', '3': 'three', '4': 'four', '5': 'five', '6': 'six', '7': 'seven', '8': 'eight', '9': 'nine', '10': 'ten' };
+
+    // Clave fonética simple: ayuda con "kat/cat", "fone/phone", etc.
+    function phoneticKey(w) {
+      let x = w.toLowerCase().replace(/[^a-z]/g, '');
+      if (!x) return '';
+      const first = x[0];
+      x = x.replace(/ph/g, 'f').replace(/ck/g, 'k').replace(/c(?=[aou])/g, 'k').replace(/c/g, 's')
+           .replace(/q/g, 'k').replace(/x/g, 'ks').replace(/wr/g, 'r').replace(/kn/g, 'n').replace(/gh/g, '')
+           .replace(/z/g, 's').replace(/y/g, 'i').replace(/w/g, 'u');
+      x = x[0] + x.slice(1).replace(/[aeiou]/g, '');
+      return x.replace(/(.)\1+/g, '$1');
+    }
+
+    function transcriptMatches(heard, target) {
+      if (!heard || !target) return false;
+      heard = heard.replace(/(\d+)/g, (m) => NUMBER_WORDS[m] || m);
+      if (heard === target) return true;
+      if ((' ' + heard + ' ').includes(' ' + target + ' ')) return true;
+      const words = heard.split(' ');
+      // homófonos conocidos
+      const alts = HOMOPHONES[target] || [];
+      if (words.some(w => alts.includes(w)) || alts.includes(heard)) return true;
+      // sin espacios ("ice cream" vs "icecream")
+      if (heard.replace(/ /g, '') === target.replace(/ /g, '')) return true;
+      // 1 letra de diferencia (palabras de 3+ letras) o 2 si es larga (8+)
+      const maxDist = target.length >= 8 ? 2 : (target.length >= 3 ? 1 : 0);
+      const closeEnough = (w) => levenshtein(w, target) <= maxDist && (target.length >= 5 || w[0] === target[0]);
+      if (maxDist && (words.some(closeEnough) || closeEnough(heard))) return true;
+      // suena igual (clave fonética)
+      const tk = phoneticKey(target);
+      if (tk.length >= 2 && (words.some(w => phoneticKey(w) === tk) || phoneticKey(heard) === tk)) return true;
+      return false;
+    }
+
+    // El usuario confirma que sí lo dijo bien
+    function overrideSpeakOk() {
+      if (speakResult) { speakResult.ok = true; speakResult.manual = true; }
+      isRevealed = true;
+      renderStudyCard();
+    }
+
+    function stopSpeechRecognition() {
+      if (recognition) {
+        try { recognition.abort(); } catch (e) {}
+      }
+      isListeningMic = false;
+    }
+
+    function startPronunciationCheck() {
+      const SpeechRec = getSpeechRecognitionAPI();
+      if (!SpeechRec) {
+        showToast('Este navegador no soporta reconocimiento de voz. Usa Chrome, Edge o Safari.', 'error');
+        return;
+      }
+      if (!currentCard) return;
+
+      if (!window.isSecureContext && !['file:','content:'].includes(location.protocol)) {
+        showToast('El micrófono solo funciona en páginas HTTPS (o localhost).', 'error');
+        return;
+      }
+
+      if (isListeningMic) {
+        stopSpeechRecognition();
+        renderStudyCard();
+        return;
+      }
+
+      try {
+        // Que el altavoz no tape al micrófono
+        if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+
+        const rec = new SpeechRec();
+        recognition = rec;
+        rec.lang = 'en-US';
+        rec.continuous = false;
+        rec.interimResults = false;
+        rec.maxAlternatives = 5;
+
+        let gotResult = false;
+        let failed = false;
+        const safety = setTimeout(() => { try { rec.stop(); } catch (e) {} }, 8000);
+
+        rec.onresult = (event) => {
+          if (rec !== recognition) return;
+          gotResult = true;
+          isListeningMic = false;
+          const target = normalizeText(currentCard.en);
+          let matched = false;
+          let bestTranscript = event.results[0][0].transcript;
+
+          outer:
+          for (let r = 0; r < event.results.length; r++) {
+            const results = event.results[r];
+            for (let i = 0; i < results.length; i++) {
+              const alt = normalizeText(results[i].transcript);
+              if (transcriptMatches(alt, target)) {
+                matched = true;
+                bestTranscript = results[i].transcript;
+                break outer;
+              }
+            }
+          }
+
+          speakResult = { ok: matched, transcript: bestTranscript };
+          isRevealed = true;
+          renderStudyCard();
+        };
+
+        rec.onspeechend = () => { try { rec.stop(); } catch (e) {} };
+
+        rec.onerror = (event) => {
+          if (rec !== recognition) return;
+          failed = true;
+          isListeningMic = false;
+          const msgs = {
+            'not-allowed': 'Permiso de micrófono denegado. Pulsa el candado 🔒 junto a la dirección y permite el micrófono.',
+            'service-not-allowed': 'El navegador bloqueó el reconocimiento de voz (revisa permisos o usa HTTPS).',
+            'audio-capture': 'No se detecta ningún micrófono.',
+            'no-speech': 'No te escuché. Acércate al micrófono e inténtalo de nuevo.',
+            'network': 'Sin servicio de voz en este navegador (Brave/Opera/Chromium no lo incluyen). Prueba Chrome o Edge.',
+            'language-not-supported': 'Este navegador no soporta inglés (en-US) para dictado.'
+          };
+          if (event.error !== 'aborted') {
+            showToast(msgs[event.error] || `No se pudo escuchar (${event.error}). Inténtalo de nuevo.`, 'error');
+          }
+          renderStudyCard();
+        };
+
+        rec.onnomatch = () => {
+          if (rec !== recognition) return;
+          showToast('No entendí la palabra. Inténtalo de nuevo.', 'error');
+        };
+
+        rec.onend = () => {
+          clearTimeout(safety);
+          if (rec !== recognition) return;
+          if (isListeningMic) {
+            isListeningMic = false;
+            if (!gotResult && !failed) showToast('No se detectó voz. Inténtalo de nuevo.', 'error');
+            renderStudyCard();
+          }
+        };
+
+        isListeningMic = true;
+        speakResult = null;
+        renderStudyCard();
+        // pequeña pausa para liberar el audio tras cancelar el TTS
+        setTimeout(() => {
+          try { rec.start(); }
+          catch (e) {
+            isListeningMic = false;
+            showToast('Error al iniciar el micrófono.', 'error');
+            renderStudyCard();
+          }
+        }, 150);
+      } catch (e) {
+        isListeningMic = false;
+        showToast('Error al iniciar el micrófono.', 'error');
+        renderStudyCard();
+      }
+    }
+
+    /**
+     * =========================================================================
+     * 7. RENDERIZADO DE LA TARJETA DE ESTUDIO (4 MODOS)
+     * =========================================================================
+     */
+    function renderSRSButtons(suggestedRating = null) {
+      const p = getCardProgress(currentCard.id);
+      const r1 = previewSM2(p, 1);
+      const r2 = previewSM2(p, 2);
+      const r3 = previewSM2(p, 3);
+      const r4 = previewSM2(p, 4);
+
+      const btnClass = (rating, base) => {
+        const ring = suggestedRating === rating ? 'ring-2 ring-white/90 scale-[1.03] shadow-lg' : '';
+        return `${base} ${ring} flex flex-col items-center justify-center py-3 px-2 rounded-2xl transition-all active:scale-95`;
+      };
+
+      return `
+        <div class="pt-5 border-t border-slate-800/90 mt-6 animate-fade-in">
+          <p class="text-[11px] text-center text-slate-400 mb-2.5 uppercase tracking-wider font-semibold">Califica tu recuerdo (SRS)</p>
+          <div class="grid grid-cols-4 gap-2 sm:gap-3">
+            <button onclick="rateCurrentCard(1)" class="${btnClass(1, 'bg-rose-500/15 hover:bg-rose-500/25 border border-rose-500/40 text-rose-300')}">
+              <span class="text-xs sm:text-sm font-bold">Otra vez</span>
+              <span class="text-[11px] opacity-80 mt-0.5">${r1.label}</span>
+            </button>
+            <button onclick="rateCurrentCard(2)" class="${btnClass(2, 'bg-amber-500/15 hover:bg-amber-500/25 border border-amber-500/40 text-amber-300')}">
+              <span class="text-xs sm:text-sm font-bold">Difícil</span>
+              <span class="text-[11px] opacity-80 mt-0.5">${r2.label}</span>
+            </button>
+            <button onclick="rateCurrentCard(3)" class="${btnClass(3, 'bg-emerald-500/15 hover:bg-emerald-500/25 border border-emerald-500/40 text-emerald-300')}">
+              <span class="text-xs sm:text-sm font-bold">Bien</span>
+              <span class="text-[11px] opacity-80 mt-0.5">${r3.label}</span>
+            </button>
+            <button onclick="rateCurrentCard(4)" class="${btnClass(4, 'bg-sky-500/15 hover:bg-sky-500/25 border border-sky-500/40 text-sky-300')}">
+              <span class="text-xs sm:text-sm font-bold">Fácil</span>
+              <span class="text-[11px] opacity-80 mt-0.5">${r4.label}</span>
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderAudioControls(word) {
+      const safe = escapeForAttr(word);
+      return `
+        <div class="flex items-center justify-center gap-2.5">
+          <button onclick="speakWord('${safe}', 1.0)" class="flex items-center gap-2 bg-indigo-600/20 hover:bg-indigo-600/35 border border-indigo-500/40 text-indigo-300 px-4 py-2.5 rounded-xl text-sm font-semibold transition active:scale-95">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5.25 5.25 0 010 7.424M6.75 8.25l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z"/></svg>
+            <span>Escuchar</span>
+          </button>
+          <button onclick="speakWord('${safe}', 0.7)" class="flex items-center gap-1.5 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-slate-300 px-3.5 py-2.5 rounded-xl text-sm font-semibold transition active:scale-95" title="Reproducir lento (0.7x)">
+            <span>🐢 Lento 0.7x</span>
+          </button>
+        </div>
+      `;
+    }
+
+    function renderStudyCard() {
+      const container = document.getElementById('study-card-container');
+
+      if (!currentCard) {
+        container.innerHTML = `
+          <div class="flex-1 flex flex-col items-center justify-center text-center py-10 space-y-4 animate-fade-in">
+            <div class="w-16 h-16 rounded-2xl bg-emerald-500/15 border border-emerald-500/30 flex items-center justify-center text-3xl">🎉</div>
+            <h2 class="text-xl sm:text-2xl font-bold text-white">¡Sesión completada por hoy!</h2>
+            <p class="text-sm text-slate-400 max-w-md">
+              No tienes más tarjetas pendientes en este bloque. Puedes cambiar de bloque, aumentar tu límite diario de palabras nuevas en Ajustes o repasar más tarde.
+            </p>
+            <div class="flex flex-wrap justify-center gap-2 pt-2">
+              <button onclick="increaseDailyLimitQuick(10)" class="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2.5 rounded-xl text-sm font-semibold transition">+10 palabras nuevas hoy</button>
+              <button onclick="switchTab('stats')" class="bg-slate-800 hover:bg-slate-700 text-slate-200 px-4 py-2.5 rounded-xl text-sm font-semibold transition">Ver estadísticas</button>
+            </div>
+          </div>
+        `;
+        return;
+      }
+
+      const status = getCardStatus(currentCard.id);
+      const statusBadge = {
+        new: '<span class="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-sky-500/15 text-sky-400 border border-sky-500/30">Nueva</span>',
+        learning: '<span class="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-amber-500/15 text-amber-400 border border-amber-500/30">Aprendiendo</span>',
+        mastered: '<span class="px-2.5 py-0.5 rounded-full text-[11px] font-semibold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">Dominada</span>'
+      }[status];
+
+      const rankLabel = currentCard.custom ? 'Personalizada' : `Frecuencia #${currentCard.rank}`;
+      const headerHtml = `
+        <div class="flex items-center justify-between gap-2 mb-6">
+          <span class="text-xs font-semibold text-slate-400 bg-slate-950/80 border border-slate-800 px-3 py-1 rounded-full">${rankLabel}</span>
+          ${statusBadge}
+        </div>
+      `;
+
+      const mode = state.settings.mode;
+      let bodyHtml = '';
+      let footerHtml = '';
+
+      // ==================== MODO 1: SOLO ESCUCHA ====================
+      if (mode === 'listen_only') {
+        if (!isRevealed) {
+          bodyHtml = `
+            <div class="flex-1 flex flex-col items-center justify-center text-center space-y-5 py-4">
+              <button onclick="speakWord('${escapeForAttr(currentCard.en)}', 1.0)" class="w-24 h-24 rounded-full bg-indigo-600/20 hover:bg-indigo-600/30 border-2 border-indigo-500/60 flex items-center justify-center text-indigo-400 transition active:scale-95 shadow-xl shadow-indigo-500/15">
+                <svg class="w-11 h-11" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5.25 5.25 0 010 7.424M6.75 8.25l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z"/></svg>
+              </button>
+              <p class="text-sm text-slate-400">Escucha la palabra en inglés y piensa en su significado</p>
+              ${renderAudioControls(currentCard.en)}
+            </div>
+          `;
+          footerHtml = `
+            <div class="pt-4">
+              <button onclick="revealCard()" class="w-full bg-indigo-600 hover:bg-indigo-500 active:scale-[0.99] text-white font-bold py-3.5 rounded-2xl text-base transition shadow-lg shadow-indigo-600/25">Mostrar respuesta</button>
+            </div>
+          `;
+        } else {
+          bodyHtml = `
+            <div class="flex-1 flex flex-col items-center justify-center text-center space-y-4 py-2 animate-fade-in">
+              <p class="text-xs uppercase tracking-widest text-slate-500 font-semibold">Inglés</p>
+              <h2 class="text-4xl sm:text-5xl font-extrabold text-white tracking-tight">${escapeHtml(currentCard.en)}</h2>
+              ${renderAudioControls(currentCard.en)}
+              <div class="w-20 h-px bg-slate-800 my-2"></div>
+              <p class="text-xs uppercase tracking-widest text-slate-500 font-semibold">Español</p>
+              <p class="text-2xl sm:text-3xl font-bold text-indigo-300">${escapeHtml(currentCard.es)}</p>
+            </div>
+          `;
+          footerHtml = renderSRSButtons();
+        }
+      }
+
+      // ==================== MODO 2: ESCUCHA + PALABRA ====================
+      else if (mode === 'listen_word') {
+        bodyHtml = `
+          <div class="flex-1 flex flex-col items-center justify-center text-center space-y-4 py-2">
+            <h2 class="text-4xl sm:text-5xl font-extrabold text-white tracking-tight">${escapeHtml(currentCard.en)}</h2>
+            ${renderAudioControls(currentCard.en)}
+            ${isRevealed ? `
+              <div class="w-20 h-px bg-slate-800 my-2"></div>
+              <p class="text-xs uppercase tracking-widest text-slate-500 font-semibold">Traducción</p>
+              <p class="text-2xl sm:text-3xl font-bold text-emerald-300 animate-fade-in">${escapeHtml(currentCard.es)}</p>
+            ` : `
+              <p class="text-sm text-slate-500 pt-3">¿Qué significa esta palabra en español?</p>
+            `}
+          </div>
+        `;
+        footerHtml = isRevealed
+          ? renderSRSButtons()
+          : `<div class="pt-4"><button onclick="revealCard()" class="w-full bg-indigo-600 hover:bg-indigo-500 active:scale-[0.99] text-white font-bold py-3.5 rounded-2xl text-base transition shadow-lg shadow-indigo-600/25">Mostrar respuesta</button></div>`;
+      }
+
+      // ==================== MODO 3: ESCRIBIR EN INGLÉS ====================
+      else if (mode === 'write') {
+        const hintText = writeHintLevel > 0
+          ? currentCard.en.slice(0, writeHintLevel) + '•'.repeat(Math.max(0, currentCard.en.length - writeHintLevel))
+          : '';
+
+        bodyHtml = `
+          <div class="flex-1 flex flex-col items-center justify-center text-center space-y-4 py-2">
+            <p class="text-xs uppercase tracking-widest text-slate-500 font-semibold">Escribe en inglés</p>
+            <h2 class="text-3xl sm:text-4xl font-extrabold text-white">${escapeHtml(currentCard.es)}</h2>
+
+            ${!isRevealed ? `
+              <div class="flex items-center justify-center gap-2">
+                <button type="button" onclick="showWriteHint()" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1.5 rounded-xl border border-slate-700 transition">💡 Pista (1ª letra)</button>
+                <button type="button" onclick="speakWord('${escapeForAttr(currentCard.en)}', 0.9)" class="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1.5 rounded-xl border border-slate-700 transition">🔊 Pista de audio</button>
+              </div>
+              ${hintText ? `<p class="text-sm font-mono tracking-widest text-amber-400 bg-amber-500/10 px-3 py-1 rounded-lg border border-amber-500/20">${escapeHtml(hintText)}</p>` : ''}
+
+              <form id="write-mode-form" onsubmit="handleWriteSubmit(event)" class="w-full max-w-md space-y-3 pt-2">
+                <input id="write-answer-input" type="text" autocomplete="off" autocapitalize="none" spellcheck="false" placeholder="Escribe la palabra en inglés..." class="w-full bg-slate-950 border-2 border-slate-700 focus:border-indigo-500 rounded-2xl px-4 py-3.5 text-center text-lg font-semibold text-white placeholder-slate-500 focus:outline-none transition" />
+                <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-500 active:scale-[0.99] text-white font-bold py-3.5 rounded-2xl text-base transition shadow-lg shadow-indigo-600/25">Comprobar</button>
+              </form>
+            ` : `
+              <div class="w-full max-w-md rounded-2xl p-4 border animate-fade-in ${writeResult === 'correct' ? 'bg-emerald-500/15 border-emerald-500/40' : 'bg-rose-500/15 border-rose-500/40'}">
+                <p class="text-sm font-bold ${writeResult === 'correct' ? 'text-emerald-300' : 'text-rose-300'}">
+                  ${writeResult === 'correct' ? '✅ ¡Correcto! Muy bien escrito.' : '❌ Incorrecto'}
+                </p>
+                <p class="text-2xl sm:text-3xl font-extrabold text-white mt-2">${escapeHtml(currentCard.en)}</p>
+              </div>
+              <div class="pt-1">${renderAudioControls(currentCard.en)}</div>
+            `}
+          </div>
+        `;
+        footerHtml = isRevealed ? renderSRSButtons(writeResult === 'correct' ? 3 : 1) : '';
+      }
+
+      // ==================== MODO 4: HABLAR / PRONUNCIACIÓN ====================
+      else if (mode === 'speak') {
+        const hasSpeechAPI = !!getSpeechRecognitionAPI();
+        bodyHtml = `
+          <div class="flex-1 flex flex-col items-center justify-center text-center space-y-4 py-2">
+            <!-- Toggle para ocultar palabra en inglés -->
+            <label class="inline-flex items-center gap-2 text-xs text-slate-400 cursor-pointer bg-slate-950/70 px-3 py-1.5 rounded-full border border-slate-800">
+              <input type="checkbox" ${speakHideEnglish ? 'checked' : ''} onchange="toggleSpeakHide(this.checked)" class="rounded accent-indigo-500" />
+              <span>Ocultar texto en inglés (modo difícil)</span>
+            </label>
+
+            <p class="text-xl sm:text-2xl font-bold text-indigo-300">${escapeHtml(currentCard.es)}</p>
+
+            ${(!speakHideEnglish || isRevealed) ? `
+              <h2 class="text-3xl sm:text-5xl font-extrabold text-white tracking-tight">${escapeHtml(currentCard.en)}</h2>
+            ` : `
+              <p class="text-sm text-slate-500 italic bg-slate-950/60 px-4 py-2 rounded-xl border border-slate-800">Palabra oculta — pronúnciala en inglés</p>
+            `}
+
+            ${!hasSpeechAPI ? `
+              <div class="w-full max-w-md bg-amber-500/10 border border-amber-500/30 rounded-2xl p-4 text-xs sm:text-sm text-amber-200">
+                ⚠️ Tu navegador no soporta reconocimiento de voz (Firefox no lo incluye). Abre esta app en <strong>Google Chrome</strong>, <strong>Microsoft Edge</strong> o <strong>Safari</strong>.
+              </div>
+            ` : `
+              <div class="pt-2 flex flex-col items-center gap-3">
+                <button onclick="startPronunciationCheck()" class="w-24 h-24 rounded-full flex items-center justify-center transition active:scale-95 shadow-xl ${isListeningMic ? 'bg-rose-600 text-white animate-pulse-ring' : 'bg-indigo-600 hover:bg-indigo-500 text-white shadow-indigo-600/30'}">
+                  <svg class="w-10 h-10" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 18.75a6 6 0 006-6v-1.5m-6 7.5a6 6 0 01-6-6v-1.5m6 7.5v3.75m-3.75 0h7.5M12 15.75a3 3 0 01-3-3V4.5a3 3 0 116 0v8.25a3 3 0 01-3 3z"/></svg>
+                </button>
+                <span class="text-xs font-semibold ${isListeningMic ? 'text-rose-400' : 'text-slate-400'}">
+                  ${isListeningMic ? '🎙️ Escuchando... di la palabra en inglés' : 'Pulsa el micrófono y pronuncia la palabra'}
+                </span>
+              </div>
+            `}
+
+            ${speakResult ? `
+              <div class="w-full max-w-md rounded-2xl p-4 border animate-fade-in ${speakResult.ok ? 'bg-emerald-500/15 border-emerald-500/40' : 'bg-rose-500/15 border-rose-500/40'}">
+                <p class="text-sm font-bold ${speakResult.ok ? 'text-emerald-300' : 'text-rose-300'}">
+                  ${speakResult.ok ? (speakResult.manual ? '✅ Marcada como correcta' : '✅ ¡Pronunciación correcta!') : '❌ No coincidió'}
+                </p>
+                <p class="text-xs text-slate-300 mt-1">
+                  El micrófono escuchó: <strong class="text-white">"${escapeHtml(speakResult.transcript)}"</strong>
+                  · Esperaba: <strong class="text-white">"${escapeHtml(currentCard.en)}"</strong>
+                </p>
+                ${!speakResult.ok ? `
+                  <button onclick="overrideSpeakOk()" class="mt-3 w-full bg-emerald-600/80 hover:bg-emerald-500 text-white text-xs font-semibold py-2 rounded-xl transition">✋ Sí la dije bien</button>
+                ` : ''}
+              </div>
+            ` : ''}
+
+            <div class="pt-1">${renderAudioControls(currentCard.en)}</div>
+          </div>
+        `;
+        footerHtml = isRevealed
+          ? renderSRSButtons(speakResult ? (speakResult.ok ? 3 : 1) : null)
+          : `<div class="pt-3"><button onclick="revealCard()" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold py-3 rounded-2xl text-sm transition">Mostrar respuesta / Calificar</button></div>`;
+      }
+
+      container.innerHTML = headerHtml + bodyHtml + footerHtml;
+
+      // Enfocar input automáticamente en modo escribir
+      if (mode === 'write' && !isRevealed) {
+        const inp = document.getElementById('write-answer-input');
+        if (inp) setTimeout(() => inp.focus(), 50);
+      }
+    }
+
+    function revealCard() {
+      isRevealed = true;
+      renderStudyCard();
+    }
+
+    function showWriteHint() {
+      if (!currentCard) return;
+      writeHintLevel = Math.min(currentCard.en.length, writeHintLevel + 1);
+      renderStudyCard();
+    }
+
+    function handleWriteSubmit(e) {
+      e.preventDefault();
+      if (!currentCard) return;
+      const inp = document.getElementById('write-answer-input');
+      const userAns = normalizeText(inp ? inp.value : '');
+      const expected = normalizeText(currentCard.en);
+      writeResult = (userAns === expected) ? 'correct' : 'wrong';
+      isRevealed = true;
+      renderStudyCard();
+      speakWord(currentCard.en, 1.0);
+    }
+
+    function toggleSpeakHide(checked) {
+      speakHideEnglish = checked;
+      renderStudyCard();
+    }
+
+    function increaseDailyLimitQuick(delta) {
+      state.settings.dailyNewLimit += delta;
+      saveState();
+      syncSettingsUI();
+      pickNextCard();
+      showToast(`Límite diario aumentado a ${state.settings.dailyNewLimit} palabras nuevas.`, 'success');
+    }
+
+    /**
+     * =========================================================================
+     * 8. DICCIONARIO Y BUSCADOR (CON PAGINACIÓN RÁPIDA)
+     * =========================================================================
+     */
+    function renderDictionary() {
+      const q = normalizeText(document.getElementById('dict-search').value);
+      const block = document.getElementById('dict-block-filter').value;
+      const statusFilter = document.getElementById('dict-status-filter').value;
+
+      let filtered = filterByBlock(allWords, block);
+      if (statusFilter !== 'all') {
+        filtered = filtered.filter(w => getCardStatus(w.id) === statusFilter);
+      }
+      if (q) {
+        filtered = filtered.filter(w =>
+          normalizeText(w.en).includes(q) || normalizeText(w.es).includes(q) || String(w.rank) === q
+        );
+      }
+
+      const total = filtered.length;
+      const totalPages = Math.max(1, Math.ceil(total / DICT_PER_PAGE));
+      if (dictPage > totalPages) dictPage = totalPages;
+
+      const start = (dictPage - 1) * DICT_PER_PAGE;
+      const slice = filtered.slice(start, start + DICT_PER_PAGE);
+
+      document.getElementById('dict-results-info').textContent = `Mostrando ${slice.length} de ${total.toLocaleString('es-ES')} palabras`;
+      document.getElementById('dict-page-label').textContent = `${dictPage} / ${totalPages}`;
+      document.getElementById('dict-prev-page').disabled = dictPage <= 1;
+      document.getElementById('dict-next-page').disabled = dictPage >= totalPages;
+
+      const listEl = document.getElementById('dict-list');
+      if (slice.length === 0) {
+        listEl.innerHTML = `<div class="text-center py-12 text-slate-500 text-sm bg-slate-900/50 border border-slate-800 rounded-2xl">No se encontraron palabras con esos filtros.</div>`;
+        return;
+      }
+
+      listEl.innerHTML = slice.map(w => {
+        const st = getCardStatus(w.id);
+        const pill = {
+          new: '<span class="px-2 py-0.5 rounded-md text-[10px] font-semibold bg-sky-500/10 text-sky-400">Nueva</span>',
+          learning: '<span class="px-2 py-0.5 rounded-md text-[10px] font-semibold bg-amber-500/10 text-amber-400">Aprendiendo</span>',
+          mastered: '<span class="px-2 py-0.5 rounded-md text-[10px] font-semibold bg-emerald-500/10 text-emerald-400">Dominada</span>'
+        }[st];
+
+        return `
+          <div class="flex items-center justify-between gap-3 bg-slate-900/90 hover:bg-slate-800/80 border border-slate-800 rounded-2xl px-4 py-3 transition">
+            <div class="flex items-center gap-3 min-w-0">
+              <span class="text-xs font-mono text-slate-500 w-10 shrink-0">${w.custom ? '★' : '#' + w.rank}</span>
+              <div class="min-w-0">
+                <div class="flex items-center gap-2 flex-wrap">
+                  <span class="font-bold text-white text-sm sm:text-base">${escapeHtml(w.en)}</span>
+                  ${pill}
+                </div>
+                <p class="text-xs sm:text-sm text-slate-400 truncate">${escapeHtml(w.es)}</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-1.5 shrink-0">
+              <button onclick="speakWord('${escapeForAttr(w.en)}', 1.0)" class="p-2 rounded-xl bg-slate-800 hover:bg-indigo-600/30 text-indigo-300 transition" title="Escuchar">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19.114 5.636a9 9 0 010 12.728M16.463 8.288a5.25 5.25 0 010 7.424M6.75 8.25l4.72-4.72a.75.75 0 011.28.53v15.88a.75.75 0 01-1.28.53l-4.72-4.72H4.51c-.88 0-1.704-.507-1.938-1.354A9.01 9.01 0 012.25 12c0-.83.112-1.633.322-2.396C2.806 8.756 3.63 8.25 4.51 8.25H6.75z"/></svg>
+              </button>
+              ${w.custom ? `
+                <button onclick="deleteCustomWord('${w.id}')" class="p-2 rounded-xl bg-slate-800 hover:bg-rose-600/30 text-rose-400 transition" title="Eliminar palabra personalizada">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0"/></svg>
+                </button>
+              ` : ''}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function deleteCustomWord(id) {
+      state.customWords = state.customWords.filter(w => w.id !== id);
+      delete state.progress[id];
+      saveState();
+      refreshAllWords();
+      renderDictionary();
+      showToast('Palabra personalizada eliminada.', 'info');
+    }
+
+    /**
+     * =========================================================================
+     * 9. ESTADÍSTICAS
+     * =========================================================================
+     */
+    function renderStats() {
+      let mastered = 0, learning = 0, dueToday = 0;
+      const now = Date.now();
+
+      for (const w of allWords) {
+        const st = getCardStatus(w.id);
+        if (st === 'mastered') mastered++;
+        else if (st === 'learning') learning++;
+        const p = state.progress[w.id];
+        if (p && p.due > 0 && p.due <= now) dueToday++;
+      }
+
+      const acc = state.stats.totalReviews > 0
+        ? Math.round((state.stats.correctReviews / state.stats.totalReviews) * 100)
+        : 0;
+
+      document.getElementById('stat-total').textContent = allWords.length.toLocaleString('es-ES');
+      document.getElementById('stat-mastered').textContent = mastered.toLocaleString('es-ES');
+      document.getElementById('stat-learning').textContent = learning.toLocaleString('es-ES');
+      document.getElementById('stat-due').textContent = dueToday.toLocaleString('es-ES');
+      document.getElementById('stat-accuracy').textContent = `${acc}%`;
+      document.getElementById('stat-streak').textContent = `${state.stats.streak} ${state.stats.streak === 1 ? 'día' : 'días'}`;
+
+      // Progreso por bloques de 500
+      const blocks = [
+        { key: '1-500', label: 'Top 1 – 500 (Esencial)' },
+        { key: '501-1000', label: 'Bloque 501 – 1000 (Intermedio)' },
+        { key: '1001-1500', label: 'Bloque 1001 – 1500 (Cotidiano)' },
+        { key: '1501-2000', label: 'Bloque 1501 – 2000 (Avanzado)' }
+      ];
+
+      const blocksHtml = blocks.map(b => {
+        const list = filterByBlock(allWords, b.key);
+        const total = list.length || 1;
+        const m = list.filter(w => getCardStatus(w.id) === 'mastered').length;
+        const l = list.filter(w => getCardStatus(w.id) === 'learning').length;
+        const pctM = Math.round((m / total) * 100);
+        const pctL = Math.round((l / total) * 100);
+
+        return `
+          <div class="space-y-1.5">
+            <div class="flex items-center justify-between text-xs sm:text-sm">
+              <span class="font-semibold text-slate-200">${b.label}</span>
+              <span class="text-slate-400">${m} dominadas · ${l} en aprendizaje / ${list.length}</span>
+            </div>
+            <div class="w-full h-3 bg-slate-800 rounded-full overflow-hidden flex">
+              <div class="bg-emerald-500 h-full transition-all" style="width: ${pctM}%"></div>
+              <div class="bg-indigo-500 h-full transition-all" style="width: ${pctL}%"></div>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      document.getElementById('stats-blocks-container').innerHTML = blocksHtml;
+    }
+
+    /**
+     * =========================================================================
+     * 10. IMPORTACIÓN, EXPORTACIÓN Y AJUSTES
+     * =========================================================================
+     */
+    function addCustomWordsBulk(rawText) {
+      const trimmed = rawText.trim();
+      if (!trimmed) {
+        showToast('Pega al menos una palabra para importar.', 'error');
+        return;
+      }
+
+      const existingSet = new Set(allWords.map(w => w.en.toLowerCase()));
+      let added = 0;
+
+      // Intentar JSON primero
+      if (trimmed.startsWith('[') || trimmed.startsWith('{')) {
+        try {
+          const parsed = JSON.parse(trimmed);
+          const arr = Array.isArray(parsed) ? parsed : (parsed.customWords || []);
+          for (const item of arr) {
+            const en = (item.en || '').trim();
+            const es = (item.es || '').trim();
+            if (en && es && !existingSet.has(en.toLowerCase())) {
+              existingSet.add(en.toLowerCase());
+              state.customWords.push({
+                id: `custom_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`,
+                rank: allWords.length + added + 1,
+                en, es, custom: true
+              });
+              added++;
+            }
+          }
+        } catch (e) {
+          showToast('JSON inválido. Revisa la sintaxis.', 'error');
+          return;
+        }
+      } else {
+        // Formato línea: ingles, español
+        const lines = trimmed.split(/\r?\n/);
+        for (const line of lines) {
+          const sep = line.includes('|') ? '|' : (line.includes(';') ? ';' : ',');
+          const parts = line.split(sep);
+          if (parts.length < 2) continue;
+          const en = parts[0].trim();
+          const es = parts.slice(1).join(',').trim();
+          if (en && es && !existingSet.has(en.toLowerCase())) {
+            existingSet.add(en.toLowerCase());
+            state.customWords.push({
+              id: `custom_${Date.now()}_${Math.random().toString(36).slice(2, 7)}`,
+              rank: allWords.length + added + 1,
+              en, es, custom: true
+            });
+            added++;
+          }
+        }
+      }
+
+      if (added > 0) {
+        saveState();
+        refreshAllWords();
+        document.getElementById('bulk-import-text').value = '';
+        showToast(`Se importaron ${added} palabras nuevas correctamente.`, 'success');
+      } else {
+        showToast('No se añadieron palabras nuevas (ya existían o formato inválido).', 'info');
+      }
+    }
+
+    function exportJSON() {
+      const blob = new Blob([JSON.stringify(state, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `ankiflow_2000_respaldo_${getTodayISO()}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      showToast('Respaldo JSON descargado.', 'success');
+    }
+
+    function copyCSVToClipboard() {
+      const csv = allWords.map(w => `${w.en}, ${w.es}`).join('\n');
+      const ta = document.createElement('textarea');
+      ta.value = csv;
+      ta.style.position = 'fixed';
+      ta.style.opacity = '0';
+      document.body.appendChild(ta);
+      ta.select();
+      try {
+        document.execCommand('copy');
+        showToast(`Se copiaron ${allWords.length} palabras al portapapeles.`, 'success');
+      } catch (e) {
+        showToast('No se pudo copiar al portapapeles.', 'error');
+      }
+      document.body.removeChild(ta);
+    }
+
+    /**
+     * =========================================================================
+     * 11. UTILIDADES DE INTERFAZ, NAVEGACIÓN Y EVENTOS
+     * =========================================================================
+     */
+    function escapeHtml(str) {
+      return String(str).replace(/[&<>"']/g, m => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m]));
+    }
+
+    function escapeForAttr(str) {
+      return String(str).replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+    }
+
+    function showToast(msg, type = 'info') {
+      const container = document.getElementById('toast-container');
+      const colors = {
+        success: 'bg-emerald-600 text-white border-emerald-400/40',
+        error: 'bg-rose-600 text-white border-rose-400/40',
+        info: 'bg-slate-800 text-slate-100 border-slate-600'
+      }[type] || 'bg-slate-800 text-white';
+
+      const toast = document.createElement('div');
+      toast.className = `pointer-events-auto px-4 py-3 rounded-xl border text-xs sm:text-sm font-semibold shadow-xl animate-fade-in max-w-xs ${colors}`;
+      toast.textContent = msg;
+      container.appendChild(toast);
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transition = 'opacity 0.25s';
+        setTimeout(() => toast.remove(), 250);
+      }, 3000);
+    }
+
+    function switchTab(tabName) {
+      stopSpeechRecognition();
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.add('hidden'));
+      document.getElementById(`tab-${tabName}`).classList.remove('hidden');
+
+      document.querySelectorAll('.nav-btn').forEach(btn => {
+        const active = btn.dataset.tab === tabName;
+        btn.className = `nav-btn px-3.5 py-1.5 rounded-lg text-sm font-medium transition-all ${active ? 'bg-indigo-600 text-white shadow' : 'text-slate-400 hover:text-white'}`;
+      });
+
+      document.querySelectorAll('.nav-btn-mobile').forEach(btn => {
+        const active = btn.dataset.tab === tabName;
+        btn.className = `nav-btn-mobile flex flex-col items-center justify-center py-1.5 rounded-xl text-[11px] font-medium transition ${active ? 'text-indigo-400 bg-indigo-500/10' : 'text-slate-400'}`;
+      });
+
+      if (tabName === 'dictionary') renderDictionary();
+      if (tabName === 'stats') renderStats();
+      if (tabName === 'study') pickNextCard();
+    }
+
+    function updateModeUI() {
+      document.querySelectorAll('.mode-btn').forEach(btn => {
+        const active = btn.dataset.mode === state.settings.mode;
+        btn.className = `mode-btn flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all ${active ? 'bg-indigo-600 text-white shadow-md shadow-indigo-600/25' : 'text-slate-400 hover:text-white hover:bg-slate-800/70'}`;
+      });
+    }
+
+    function syncSettingsUI() {
+      document.getElementById('setting-new-limit').value = state.settings.dailyNewLimit;
+      document.getElementById('setting-autoplay').checked = state.settings.autoplay;
+      document.getElementById('study-block-filter').value = state.settings.block;
+      loadVoices();
+    }
+
+    // Inicialización de eventos DOM
+    function initEvents() {
+      // Navegación
+      document.querySelectorAll('.nav-btn, .nav-btn-mobile').forEach(btn => {
+        btn.addEventListener('click', () => switchTab(btn.dataset.tab));
+      });
+
+      // Selector de modos
+      document.querySelectorAll('.mode-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          state.settings.mode = btn.dataset.mode;
+          saveState();
+          updateModeUI();
+          isRevealed = false;
+          writeResult = null;
+          writeHintLevel = 0;
+          speakResult = null;
+          renderStudyCard();
+          if (currentCard && state.settings.autoplay && (state.settings.mode === 'listen_only' || state.settings.mode === 'listen_word')) {
+            speakWord(currentCard.en, 1.0);
+          }
+        });
+      });
+
+      // Filtro de bloque en estudio
+      document.getElementById('study-block-filter').addEventListener('change', (e) => {
+        state.settings.block = e.target.value;
+        saveState();
+        pickNextCard();
+      });
+
+      // Diccionario filtros y paginación
+      document.getElementById('dict-search').addEventListener('input', () => { dictPage = 1; renderDictionary(); });
+      document.getElementById('dict-block-filter').addEventListener('change', () => { dictPage = 1; renderDictionary(); });
+      document.getElementById('dict-status-filter').addEventListener('change', () => { dictPage = 1; renderDictionary(); });
+      document.getElementById('dict-prev-page').addEventListener('click', () => { if (dictPage > 1) { dictPage--; renderDictionary(); } });
+      document.getElementById('dict-next-page').addEventListener('click', () => { dictPage++; renderDictionary(); });
+
+      // Ajustes
+      document.getElementById('btn-save-settings').addEventListener('click', () => {
+        const lim = parseInt(document.getElementById('setting-new-limit').value, 10);
+        state.settings.dailyNewLimit = isNaN(lim) ? 20 : Math.max(1, Math.min(500, lim));
+        state.settings.autoplay = document.getElementById('setting-autoplay').checked;
+        state.settings.voiceURI = document.getElementById('setting-voice').value;
+        saveState();
+        showToast('Preferencias guardadas.', 'success');
+      });
+
+      document.getElementById('btn-bulk-import').addEventListener('click', () => {
+        addCustomWordsBulk(document.getElementById('bulk-import-text').value);
+      });
+      document.getElementById('btn-export-json').addEventListener('click', exportJSON);
+      document.getElementById('btn-export-csv').addEventListener('click', copyCSVToClipboard);
+
+      // Modal añadir palabra
+      const addModal = document.getElementById('add-modal');
+      const closeAdd = () => { addModal.classList.add('hidden'); addModal.classList.remove('flex'); };
+      document.getElementById('btn-open-add-modal').addEventListener('click', () => {
+        addModal.classList.remove('hidden'); addModal.classList.add('flex');
+        document.getElementById('add-en').focus();
+      });
+      document.getElementById('btn-close-add-modal').addEventListener('click', closeAdd);
+      document.getElementById('btn-cancel-add').addEventListener('click', closeAdd);
+      document.getElementById('add-word-form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const en = document.getElementById('add-en').value.trim();
+        const es = document.getElementById('add-es').value.trim();
+        if (!en || !es) return;
+        addCustomWordsBulk(`${en}, ${es}`);
+        document.getElementById('add-en').value = '';
+        document.getElementById('add-es').value = '';
+        closeAdd();
+      });
+
+      // Modal reiniciar progreso
+      const resetModal = document.getElementById('reset-modal');
+      const closeReset = () => { resetModal.classList.add('hidden'); resetModal.classList.remove('flex'); };
+      document.getElementById('btn-open-reset-modal').addEventListener('click', () => {
+        resetModal.classList.remove('hidden'); resetModal.classList.add('flex');
+      });
+      document.getElementById('btn-cancel-reset').addEventListener('click', closeReset);
+      document.getElementById('btn-confirm-reset').addEventListener('click', () => {
+        state.progress = {};
+        state.stats = { ...DEFAULT_STATE.stats, todayDate: getTodayISO() };
+        saveState();
+        closeReset();
+        checkDailyRollover();
+        showToast('Progreso SRS reiniciado.', 'info');
+        switchTab('study');
+      });
+
+      // Atajos de teclado en escritorio
+      document.addEventListener('keydown', (e) => {
+        if (document.getElementById('tab-study').classList.contains('hidden')) return;
+        const tag = (document.activeElement?.tagName || '').toLowerCase();
+        if (tag === 'input' || tag === 'textarea' || tag === 'select') return;
+        if (!currentCard) return;
+
+        if (e.code === 'Space' && !isRevealed && state.settings.mode !== 'write') {
+          e.preventDefault();
+          revealCard();
+        } else if (isRevealed && ['1', '2', '3', '4'].includes(e.key)) {
+          rateCurrentCard(Number(e.key));
+        } else if (e.key.toLowerCase() === 'r') {
+          speakWord(currentCard.en, 1.0);
+        } else if (e.key.toLowerCase() === 'l') {
+          speakWord(currentCard.en, 0.7);
+        }
+      });
+    }
+
+    // Arranque de la aplicación
+    window.addEventListener('DOMContentLoaded', () => {
+      refreshAllWords();
+      checkDailyRollover();
+      syncSettingsUI();
+      updateModeUI();
+      initEvents();
+      switchTab('study');
+    });
+  </script>
+</body>
+</html>
+```
